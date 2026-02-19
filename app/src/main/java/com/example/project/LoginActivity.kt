@@ -47,13 +47,13 @@ class LoginActivity : AppCompatActivity() {
             val password = userPass?.text.toString().trim { it <= ' ' }
 
             if (email.isEmpty()) {
-                Toast.makeText(this, "Please enter your email address.", Toast.LENGTH_LONG).show()
-                Log.d(TAG, "Email was empty!")
+                Toast.makeText(this, "โปรดป้อนที่อยู่อีเมลของคุณ", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "อีเมลว่างเปล่า!")
                 return@setOnClickListener
             }
             if (password.isEmpty()) {
-                Toast.makeText(this, "Please enter your password.", Toast.LENGTH_LONG).show()
-                Log.d(TAG, "Password was empty!")
+                Toast.makeText(this, "กรุณากรอกรหัสผ่านของคุณ", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "รหัสผ่านว่างเปล่า!")
                 return@setOnClickListener
             }
 
@@ -63,16 +63,16 @@ class LoginActivity : AppCompatActivity() {
 
                     if (password.length < 6) {
 
-                        userPass?.error = "Please check your password.Password must have minimum 6 characters."
-                        Log.d(TAG, "Enter password less than 6 characters.")
+                        userPass?.error = "โปรดตรวจสอบรหัสผ่านของคุณ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+                        Log.d(TAG, "กรุณาป้อนรหัสผ่านที่มีความยาวไม่เกิน 6 ตัวอักษร")
                     } else {
-                        Toast.makeText(this, "Authentication Failed: " + task.exception!!.message, Toast.LENGTH_LONG).show()
-                        Log.d(TAG, "Authentication Failed: " + task.exception!!.message)
+                        Toast.makeText(this, "การตรวจสอบสิทธิ์ล้มเหลว: " + task.exception!!.message, Toast.LENGTH_LONG).show()
+                        Log.d(TAG, "การตรวจสอบสิทธิ์ล้มเหลว: " + task.exception!!.message)
                     }
 
                 } else {
-                    Toast.makeText(this, "Sign in successfully!", Toast.LENGTH_LONG).show()
-                    Log.d(TAG, "Sign in successfully!")
+                    Toast.makeText(this, "เข้าสู่ระบบสำเร็จ!", Toast.LENGTH_LONG).show()
+                    Log.d(TAG, "เข้าสู่ระบบสำเร็จ!")
                     startActivity(Intent(this@LoginActivity, ProfileActivity::class.java))
                     finish()
                 }
