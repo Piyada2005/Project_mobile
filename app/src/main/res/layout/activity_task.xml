@@ -12,15 +12,15 @@
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="150dp"
         android:contentDescription="เพิ่มงาน"
         android:src="@drawable/ic_add"
-        app:backgroundTint="#2196F3"
-        app:tint="@android:color/white"
+        app:backgroundTint="#94b9ff"
+        app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:tint="@android:color/white" />
 
     <include
         android:id="@+id/bottomBar"
