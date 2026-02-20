@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="68dp"
+        android:height="64dp"
+        android:viewportWidth="68"
+        android:viewportHeight="64">
+
+    <!-- Circle -->
+    <path
+            android:pathData="M29.5,9
+                          C45.2899,9 58,21.1368 58,36
+                          C58,50.8632 45.2899,63 29.5,63
+                          C13.7101,63 1,50.8632 1,36
+                          C1,21.1368 13.7101,9 29.5,9 Z"
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="2"/>
+
+    <!-- Done check icon (simplified version) -->
+    <path
+            android:pathData="M20,36 L28,44 L42,24"
+            android:strokeColor="#000000"
+            android:strokeWidth="4"
+            android:fillColor="@android:color/transparent"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"/>
+
+</vector>

@@ -1,113 +1,336 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f0f9ff"
-    android:backgroundTint="#f0f9ff"
-    tools:context=".AddTaskActivity">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F0F9FF">
 
-
+    <!-- Back Arrow -->
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.067"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039"
-        app:srcCompat="@drawable/arrow_back_ios_24" />
+            android:id="@+id/btnBack"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/arrow_back_ios_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
+    <!-- Title -->
     <TextView
-        android:id="@+id/AddTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="เพิ่มงาน"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="เพิ่มงาน"
+            android:textSize="20sp"
+            android:textColor="#929292"
+            app:layout_constraintTop_toTopOf="@id/btnBack"
+            app:layout_constraintBottom_toBottomOf="@id/btnBack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- CARD 1 -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/card"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="24dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/AddTask"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+            android:id="@+id/card1"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/btnBack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- ชื่อวิชา -->
-            <EditText
-                android:id="@+id/addProjName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ชื่อวิชา"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:background="@android:color/transparent"
-                android:paddingBottom="8dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="16dp">
 
-            <!-- เส้น divider -->
+            <EditText
+                    android:id="@+id/addProjName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ชื่อวิชา"
+                    android:textSize="20sp"
+                    android:textColor="#454545"
+                    android:background="@android:color/transparent"/>
+
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#DDDDDD"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:background="#BEBEBE"/>
 
-            <!-- รายละเอียด -->
             <EditText
-                android:id="@+id/addProjDetail"
-                android:gravity="start"
-                android:textAlignment="viewStart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="รายละเอียดงาน"
-                android:textSize="14sp"
-                android:background="@android:color/transparent"
-                android:paddingTop="8dp"
-                android:minHeight="80dp"/>
+                    android:id="@+id/addProjDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="รายละเอียดงาน"
+                    android:textSize="16sp"
+                    android:textColor="#9A9A9A"
+                    android:layout_marginTop="8dp"
+                    android:minHeight="90dp"
+                    android:background="@android:color/transparent"/>
 
-            <!-- เพิ่มงานย่อย -->
             <TextView
-                android:id="@+id/addSubtask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+ เพิ่มงานย่อย"
-                android:textColor="#4A90E2"
-                android:textSize="14sp"
-                android:layout_marginTop="12dp"/>
+                    android:id="@+id/addSubtask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ เพิ่มงานย่อย"
+                    android:textSize="16sp"
+                    android:textColor="#6DB1FF"
+                    android:layout_marginTop="8dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerSubtask"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerSubtask"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                    android:id="@+id/recyclerSubtask"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
+    <!-- CARD 2 (แก้ใหม่) -->
+    <androidx.cardview.widget.CardView
+            android:id="@+id/card2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="14dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/card1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+            <!-- วันที่ครบกำหนด -->
+            <TextView
+                    android:id="@+id/txtDueLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="วันที่ครบกำหนด"
+                    android:textSize="16sp"
+                    android:textColor="#454545"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:id="@+id/txtDueValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2026/01/14"
+                    android:textSize="14sp"
+                    android:textColor="#6DB1FF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txtDueLabel"/>
+
+            <!-- เวลา -->
+            <TextView
+                    android:id="@+id/txtTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="เวลา"
+                    android:textSize="16sp"
+                    android:textColor="#454545"
+                    android:layout_marginTop="18dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtDueLabel"/>
+
+            <TextView
+                    android:id="@+id/txtTimeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ไม่"
+                    android:textSize="14sp"
+                    android:textColor="#6DB1FF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txtTimeLabel"/>
+
+            <!-- เตือนเมื่อ -->
+            <TextView
+                    android:id="@+id/txtNotifyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="เตือนเมื่อ"
+                    android:textSize="16sp"
+                    android:textColor="#454545"
+                    android:layout_marginTop="18dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtTimeLabel"/>
+
+            <TextView
+                    android:id="@+id/txtNotifyValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ไม่"
+                    android:textSize="14sp"
+                    android:textColor="#6DB1FF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txtNotifyLabel"/>
+
+            <!-- ทำซ้ำ -->
+            <TextView
+                    android:id="@+id/txtRepeatLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ทำซ้ำ"
+                    android:textSize="16sp"
+                    android:textColor="#454545"
+                    android:layout_marginTop="18dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtNotifyLabel"/>
+
+            <TextView
+                    android:id="@+id/txtRepeatValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ไม่"
+                    android:textSize="14sp"
+                    android:textColor="#6DB1FF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txtRepeatLabel"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- CARD 3 -->
+    <androidx.cardview.widget.CardView
+            android:id="@+id/card3"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="14dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/card2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+            <!-- หมายเหตุ -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp">
+
+                <!-- ซ้าย -->
+                <TextView
+                        android:id="@+id/tvNoteLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="หมายเหตุ"
+                        android:textSize="16sp"
+                        android:textColor="#454545"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <!-- ขวา (กดได้) -->
+                <TextView
+                        android:id="@+id/tvNoteValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="เพิ่ม"
+                        android:textSize="16sp"
+                        android:textColor="#9A9A9A"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- แนบลิงก์ -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp">
+
+                <!-- ซ้าย -->
+                <TextView
+                        android:id="@+id/tvLinkLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="แนบลิงก์"
+                        android:textSize="16sp"
+                        android:textColor="#454545"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <!-- ขวา (กดได้) -->
+                <TextView
+                        android:id="@+id/tvLinkValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="เพิ่ม"
+                        android:textSize="16sp"
+                        android:textColor="#9A9A9A"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- SAVE BUTTON -->
+    <ImageView
+            android:id="@+id/saveButton"
+            android:layout_width="68dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/ic_check_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
