@@ -5,6 +5,98 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f0f9ff"
+    android:backgroundTint="#f0f9ff"
     tools:context=".AddTaskActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.039"
+        app:srcCompat="@drawable/arrow_back_ios_24" />
+
+    <TextView
+        android:id="@+id/AddTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="เพิ่มงาน"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.036" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/AddTask"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ชื่อวิชา -->
+            <EditText
+                android:id="@+id/addProjName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ชื่อวิชา"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:background="@android:color/transparent"
+                android:paddingBottom="8dp"/>
+
+            <!-- เส้น divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"/>
+
+            <!-- รายละเอียด -->
+            <EditText
+                android:id="@+id/addProjDetail"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="รายละเอียดงาน"
+                android:textSize="14sp"
+                android:background="@android:color/transparent"
+                android:paddingTop="8dp"
+                android:minHeight="80dp"/>
+
+            <!-- เพิ่มงานย่อย -->
+            <TextView
+                android:id="@+id/addSubtask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ เพิ่มงานย่อย"
+                android:textColor="#4A90E2"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
