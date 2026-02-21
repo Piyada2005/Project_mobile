@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="ทำซ้ำทุกครั้ง"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/spinnerEveryWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="เปิดซ้ำ"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/cbMon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="จันทร์"/>
+
+            <CheckBox
+                android:id="@+id/cbTue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="อังคาร"/>
+
+            <CheckBox
+                android:id="@+id/cbWed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="พุธ"/>
+
+            <CheckBox
+                android:id="@+id/cbThu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="พฤหัสบดี"/>
+
+            <CheckBox
+                android:id="@+id/cbFri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ศุกร์"/>
+
+            <CheckBox
+                android:id="@+id/cbSat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="เสาร์"/>
+
+            <CheckBox
+                android:id="@+id/cbSun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="อาทิตย์"/>
+        </LinearLayout>
+
+        <TextView
+            android:text="สิ้นสุดเมื่อ"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/spinnerEndWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</ScrollView>
