@@ -33,11 +33,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.widget.LinearLayout
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
 
 class AddTaskActivity : AppCompatActivity() {
 
     private val subtaskList = mutableListOf<String>()
     private lateinit var adapter: SubtaskAdapter
+
+    private var selectedCategory = "ไม่มีหมวดหมู่"
 
     // private val txtDueValue = findViewById<TextView>(R.id.txtDueValue)
     // private val txtTimeValue = findViewById<TextView>(R.id.txtTimeValue)
@@ -272,6 +278,13 @@ class AddTaskActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener {
 
+            val auth = FirebaseAuth.getInstance()
+
+            if (auth.currentUser == null) {
+                Toast.makeText(this, "กรุณาเข้าสู่ระบบก่อน", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val title = findViewById<EditText>(R.id.addProjName).text.toString()
             val detail = findViewById<EditText>(R.id.addProjDetail).text.toString()
 
@@ -280,12 +293,54 @@ class AddTaskActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // TODO: ตรงนี้คือจุดที่คุณจะบันทึกข้อมูล
-            // เช่น บันทึกลง Database หรือส่งกลับหน้าเดิม
+            val db = FirebaseFirestore.getInstance()
+            val userId = auth.currentUser!!.uid
+
+            val task = hashMapOf(
+                "title" to title,
+                "description" to detail,
+                "category" to selectedCategory,
+                "dueDate" to txtDueValue.text.toString(),
+                "time" to txtTimeValue.text.toString(),
+                "notify" to txtNotifyValue.text.toString(),
+                "repeat" to txtRepeatValue.text.toString(),
+                "note" to txtNote.text.toString(),
+                "userId" to userId,
+                "createdAt" to FieldValue.serverTimestamp()
+            )
+
+            db.collection("tasks")
+                .add(task)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "บันทึกสำเร็จ", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
+                }
 
             finish()   // บันทึกเสร็จแล้วกลับหน้าเดิม
         }
 
+        val tvCategoryValue = findViewById<TextView>(R.id.tvCategoryValue)
+
+        tvCategoryValue.setOnClickListener {
+
+            val categories = arrayOf(
+                "ไม่มีหมวดหมู่",
+                "งาน",
+                "รายการโปรด",
+                "วันเกิด"
+            )
+
+            AlertDialog.Builder(this)
+                .setTitle("เลือกหมวดหมู่")
+                .setItems(categories) { _, which ->
+                    selectedCategory = categories[which]
+                    tvCategoryValue.text = selectedCategory
+                }
+                .show()
+        }
 
     }
 
@@ -324,15 +379,19 @@ class AddTaskActivity : AppCompatActivity() {
 
     private fun showLinkDialog() {
 
-        val editText = EditText(this)
-        editText.hint = "วางลิงก์ที่นี่"
+        val view = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_add_link, null)
+
+        val edit = view.findViewById<EditText>(R.id.editLink)
 
         AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
-            .setView(editText)
-            .setPositiveButton("บันทึก") { _, _ ->
-                val link = editText.text.toString()
-                findViewById<TextView>(R.id.tvLinkValue).text = link
+            .setView(view)
+            .setPositiveButton("เพิ่ม") { _, _ ->
+                val link = edit.text.toString()
+                if (link.isNotEmpty()) {
+                    findViewById<TextView>(R.id.tvLinkValue).text = link
+                }
             }
             .setNegativeButton("ยกเลิก", null)
             .show()
