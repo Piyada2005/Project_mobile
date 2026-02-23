@@ -31,60 +31,86 @@ class TaskActivity : BaseActivity() {
 
         recyclerCategory.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerTasks.layoutManager = LinearLayoutManager(this)
+
+        recyclerTasks.layoutManager =
+            LinearLayoutManager(this)
 
         taskAdapter = TaskAdapter(displayList)
         recyclerTasks.adapter = taskAdapter
 
+        // โหลดครั้งแรก
         loadTasks()
 
         val fab = findViewById<FloatingActionButton>(R.id.fab_add)
         fab.setOnClickListener {
-            // เช็คว่ามี Activity นี้จริงไหม หรือเปลี่ยนเป็น AddTaskActivity ตามโปรเจกต์คุณ
-            try {
-                startActivity(Intent(this, AddTaskActivity::class.java))
-            } catch (e: Exception) {
-                Log.e("TaskActivity", "AddTaskActivity not found: ${e.message}")
-            }
+            startActivity(Intent(this, AddTaskActivity::class.java))
         }
 
         val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
+
         recyclerCategory.adapter = CategoryAdapter(categoryList) { selectedCategory ->
             filterTasks(selectedCategory)
         }
     }
 
+    // 🔥 รีโหลดทุกครั้งที่กลับมาหน้านี้
+    override fun onResume() {
+        super.onResume()
+        loadTasks()
+    }
+
     private fun loadTasks() {
-        if (userId.isEmpty()) return
+
+        if (userId.isEmpty()) {
+            Log.e("TaskActivity", "User not logged in")
+            return
+        }
 
         db.collection("tasks")
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
+
                 allTasks.clear()
+
                 for (document in result) {
                     try {
                         val task = document.toObject(Task::class.java)
                         allTasks.add(task)
                     } catch (e: Exception) {
-                        Log.e("TaskActivity", "Error parsing task: ${e.message}")
+                        Log.e("TaskActivity", "Parse error: ${e.message}")
                     }
                 }
+
+                // แสดงทั้งหมดเป็น default
                 filterTasks("ทั้งหมด")
             }
             .addOnFailureListener { e ->
-                Log.e("TaskActivity", "Error loading tasks", e)
+                Log.e("TaskActivity", "Load error", e)
             }
     }
 
     private fun filterTasks(category: String) {
-        val filteredResult = if (category == "ทั้งหมด") {
-            allTasks
-        } else {
-            // เพิ่มการเช็ค null (it.category ?: "") เพื่อป้องกันแอปเด้งถ้าข้อมูลใน Firestore ไม่มีหมวดหมู่
-            allTasks.filter { (it.category ?: "") == category }
+
+        val filteredResult = when (category) {
+
+            "ทั้งหมด" -> allTasks
+
+            "งาน" -> allTasks.filter {
+                (it.category ?: "") == "งาน"
+            }
+
+            "วันเกิด" -> allTasks.filter {
+                (it.category ?: "") == "วันเกิด"
+            }
+
+            "รายการโปรด" -> allTasks.filter {
+                (it.category ?: "") == "รายการโปรด"
+            }
+
+            else -> allTasks
         }
-        
+
         taskAdapter.updateList(filteredResult)
     }
 }
