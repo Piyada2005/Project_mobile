@@ -61,32 +61,24 @@ class TaskActivity : BaseActivity() {
 
     private fun loadTasks() {
 
-        if (userId.isEmpty()) {
-            Log.e("TaskActivity", "User not logged in")
-            return
-        }
+        val currentUser = FirebaseAuth.getInstance().currentUser ?: return
+        val userId = currentUser.uid
 
         db.collection("tasks")
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
 
+                Log.d("DEBUG_TASK", "Total docs = ${result.size()}")
+
                 allTasks.clear()
 
                 for (document in result) {
-                    try {
-                        val task = document.toObject(Task::class.java)
-                        allTasks.add(task)
-                    } catch (e: Exception) {
-                        Log.e("TaskActivity", "Parse error: ${e.message}")
-                    }
+                    val task = document.toObject(Task::class.java)
+                    allTasks.add(task)
                 }
 
-                // แสดงทั้งหมดเป็น default
                 filterTasks("ทั้งหมด")
-            }
-            .addOnFailureListener { e ->
-                Log.e("TaskActivity", "Load error", e)
             }
     }
 

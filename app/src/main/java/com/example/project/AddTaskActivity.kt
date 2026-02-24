@@ -274,6 +274,7 @@ class AddTaskActivity : AppCompatActivity() {
             finish()   // ปิดหน้านี้ กลับหน้าก่อนหน้า
         }
 
+
         val saveButton = findViewById<ImageView>(R.id.saveButton)
 
         saveButton.setOnClickListener {
@@ -318,8 +319,6 @@ class AddTaskActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
                 }
-
-            finish()   // บันทึกเสร็จแล้วกลับหน้าเดิม
         }
 
         val tvCategoryValue = findViewById<TextView>(R.id.tvCategoryValue)
