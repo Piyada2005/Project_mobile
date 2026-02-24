@@ -1,5 +1,6 @@
 package com.example.project
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,14 +24,15 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
-        holder.txtTitle.text = task.title ?: ""
-        holder.txtDate.text = task.dueDate ?: ""
+
+        // ถ้า title เป็นค่าว่างหรือ null ให้แสดงข้อความว่า "ไม่มีชื่อ"
+        holder.txtTitle.text = task.title?.takeIf { it.isNotBlank() } ?: "ไม่มีชื่องาน"
+        holder.txtDate.text = task.dueDate ?: "ไม่ระบุวัน"
     }
 
-    override fun getItemCount(): Int {
-        return taskList.size
-    }
+    override fun getItemCount(): Int = taskList.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newList: List<Task>) {
         taskList.clear()
         taskList.addAll(newList)

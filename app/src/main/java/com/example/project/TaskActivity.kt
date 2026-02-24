@@ -15,11 +15,10 @@ class TaskActivity : BaseActivity() {
     private lateinit var recyclerTasks: RecyclerView
 
     private val allTasks = mutableListOf<Task>()
-    private val displayList = mutableListOf<Task>()
+    // ไม่จำเป็นต้องใช้ displayList แยก ถ้า adapter มีกลไก updateList อยู่แล้ว
     private lateinit var taskAdapter: TaskAdapter
 
     private val db = FirebaseFirestore.getInstance()
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,77 +31,64 @@ class TaskActivity : BaseActivity() {
         recyclerCategory.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        recyclerTasks.layoutManager =
-            LinearLayoutManager(this)
+        recyclerTasks.layoutManager = LinearLayoutManager(this)
 
-        taskAdapter = TaskAdapter(displayList)
+        // เริ่มต้นด้วย List ว่างเปล่า
+        taskAdapter = TaskAdapter(mutableListOf())
         recyclerTasks.adapter = taskAdapter
 
-        // โหลดครั้งแรก
         loadTasks()
 
-        val fab = findViewById<FloatingActionButton>(R.id.fab_add)
-        fab.setOnClickListener {
+        findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             startActivity(Intent(this, AddTaskActivity::class.java))
         }
 
         val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
-
         recyclerCategory.adapter = CategoryAdapter(categoryList) { selectedCategory ->
             filterTasks(selectedCategory)
         }
     }
 
-    // 🔥 รีโหลดทุกครั้งที่กลับมาหน้านี้
     override fun onResume() {
         super.onResume()
         loadTasks()
     }
 
     private fun loadTasks() {
-
-        val currentUser = FirebaseAuth.getInstance().currentUser ?: return
-        val userId = currentUser.uid
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            Log.e("DEBUG_TASK", "User not logged in")
+            return
+        }
 
         db.collection("tasks")
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("userId", currentUser.uid)
             .get()
             .addOnSuccessListener { result ->
-
-                Log.d("DEBUG_TASK", "Total docs = ${result.size()}")
-
                 allTasks.clear()
-
                 for (document in result) {
                     val task = document.toObject(Task::class.java)
+                    // เพิ่มบรรทัดนี้เพื่อแอบดูว่ามันแปลงค่าได้ครบไหม หรือเป็น null
+                    Log.d("DEBUG_TASK", "ชื่อ: ${task.title}, หมวด: ${task.category}")
                     allTasks.add(task)
                 }
-
+                Log.d("DEBUG_TASK", "Loaded ${allTasks.size} tasks")
                 filterTasks("ทั้งหมด")
+            }
+            .addOnFailureListener { e ->
+                Log.e("DEBUG_TASK", "Error loading tasks", e)
             }
     }
 
     private fun filterTasks(category: String) {
-
-        val filteredResult = when (category) {
-
-            "ทั้งหมด" -> allTasks
-
-            "งาน" -> allTasks.filter {
-                (it.category ?: "") == "งาน"
-            }
-
-            "วันเกิด" -> allTasks.filter {
-                (it.category ?: "") == "วันเกิด"
-            }
-
-            "รายการโปรด" -> allTasks.filter {
-                (it.category ?: "") == "รายการโปรด"
-            }
-
-            else -> allTasks
+        val filteredResult = if (category == "ทั้งหมด") {
+            allTasks
+        } else {
+            allTasks.filter { it.category == category }
         }
 
+        // ตรวจสอบว่าใน TaskAdapter มีฟังก์ชัน updateList(newList: List<Task>)
+        // ที่เรียก notifyDataSetChanged() หรือยัง
         taskAdapter.updateList(filteredResult)
     }
 }
