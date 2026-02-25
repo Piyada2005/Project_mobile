@@ -12,7 +12,7 @@
     <!-- ข้อความ เพิ่มงาน -->
 
     <ImageView
-        android:id="@+id/btnBack"
+        android:id="@+id/debtnBack"
         android:layout_width="27dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
@@ -24,21 +24,21 @@
 
     <!-- กรอบแรก -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/detitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="เพิ่มงาน"
+        android:text="รายละเอียดงาน"
         android:textColor="#929292"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/debtnBack"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card1"
+        android:id="@+id/decard1"
         android:layout_width="0dp"
         android:layout_height="230dp"
         android:layout_marginStart="35dp"
@@ -49,7 +49,7 @@
         app:cardElevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack">
+        app:layout_constraintTop_toBottomOf="@id/debtnBack">
 
         <!-- กล่องอันที่หนึ่ง -->
         <LinearLayout
@@ -62,7 +62,7 @@
 
             <!-- ชื่อวิชา -->
             <EditText
-                android:id="@+id/addProjName"
+                android:id="@+id/deaddProjName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -79,7 +79,7 @@
 
             <!-- รายละเอียดงาน -->
             <EditText
-                android:id="@+id/addProjDetail"
+                android:id="@+id/deaddProjDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -91,7 +91,7 @@
 
             <!-- เพิ่มงานย่อย -->
             <TextView
-                android:id="@+id/addSubtask"
+                android:id="@+id/deaddSubtask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -100,7 +100,7 @@
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerSubtask"
+                android:id="@+id/derecyclerSubtask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
@@ -111,7 +111,7 @@
 
     <!-- กรอบสอง -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/card2"
+        android:id="@+id/decard2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -122,7 +122,7 @@
         app:cardElevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card1">
+        app:layout_constraintTop_toBottomOf="@id/decard1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtDueLabel"
+                android:id="@+id/detxtDueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
@@ -150,7 +150,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtDueValue"
+                android:id="@+id/detxtDueValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -160,7 +160,7 @@
                 android:text="2026/01/14"
                 android:textColor="#6DB1FF"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/txtDueLabel"
+                app:layout_constraintBaseline_toBaselineOf="@id/detxtDueLabel"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- เวลา -->
@@ -175,7 +175,7 @@
                 app:layout_constraintVertical_bias="0.328" />
 
             <TextView
-                android:id="@+id/txtTimeLabel"
+                android:id="@+id/detxtTimeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
@@ -184,10 +184,10 @@
                 android:textColor="#454545"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtDueLabel" />
+                app:layout_constraintTop_toBottomOf="@id/detxtDueLabel" />
 
             <TextView
-                android:id="@+id/txtTimeValue"
+                android:id="@+id/detxtTimeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -197,13 +197,13 @@
                 android:text="ไม่"
                 android:textColor="#6DB1FF"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/txtTimeLabel"
+                app:layout_constraintBaseline_toBaselineOf="@id/detxtTimeLabel"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- เตือนเมื่อ -->
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/imageView"
                 android:layout_width="26dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_notification"
@@ -213,7 +213,7 @@
                 app:layout_constraintVertical_bias="0.648" />
 
             <TextView
-                android:id="@+id/txtNotifyLabel"
+                android:id="@+id/detxtNotifyLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
@@ -222,10 +222,10 @@
                 android:textColor="#454545"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtTimeLabel" />
+                app:layout_constraintTop_toBottomOf="@id/detxtTimeLabel" />
 
             <TextView
-                android:id="@+id/txtNotifyValue"
+                android:id="@+id/detxtNotifyValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -235,13 +235,13 @@
                 android:text="ไม่"
                 android:textColor="#6DB1FF"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/txtNotifyLabel"
+                app:layout_constraintBaseline_toBaselineOf="@id/detxtNotifyLabel"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- ทำซ้ำ -->
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/imageView3"
                 android:layout_width="26dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_repeat"
@@ -251,7 +251,7 @@
                 app:layout_constraintVertical_bias="0.976" />
 
             <TextView
-                android:id="@+id/txtRepeatLabel"
+                android:id="@+id/detxtRepeatLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
@@ -260,10 +260,10 @@
                 android:textColor="#454545"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtNotifyLabel" />
+                app:layout_constraintTop_toBottomOf="@id/detxtNotifyLabel" />
 
             <TextView
-                android:id="@+id/txtRepeatValue"
+                android:id="@+id/detxtRepeatValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -273,7 +273,7 @@
                 android:text="ไม่"
                 android:textColor="#6DB1FF"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/txtRepeatLabel"
+                app:layout_constraintBaseline_toBaselineOf="@id/detxtRepeatLabel"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -282,7 +282,7 @@
 
     <!-- กรอบสาม -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/card3"
+        android:id="@+id/decard3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -293,7 +293,7 @@
         app:cardElevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card2">
+        app:layout_constraintTop_toBottomOf="@id/decard2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -302,17 +302,11 @@
             android:padding="14dp">
 
             <!-- หมวดหมู่ -->
-
-            <!-- หมายเหตุ -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
-
-                <!-- ซ้าย -->
-
-                <!-- ขวา -->
 
                 <ImageView
                     android:layout_width="26dp"
@@ -323,8 +317,9 @@
                     app:layout_constraintVertical_bias="0.444"
                     tools:layout_editor_absoluteX="2dp" />
 
+                <!-- ซ้าย -->
                 <TextView
-                    android:id="@+id/tvCategoryLabel"
+                    android:id="@+id/detvCategoryLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -333,11 +328,11 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- ขวา -->
                 <TextView
-                    android:id="@+id/tvCategoryValue"
+                    android:id="@+id/detvCategoryValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -351,13 +346,12 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- หมายเหตุ -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
-
-                <!-- ซ้าย -->
 
                 <ImageView
                     android:layout_width="31dp"
@@ -368,10 +362,9 @@
                     app:layout_constraintVertical_bias="0.444"
                     tools:layout_editor_absoluteX="2dp" />
 
-                <!-- ขวา (กดได้) -->
-
+                <!-- ซ้าย -->
                 <TextView
-                    android:id="@+id/tvNoteLabel"
+                    android:id="@+id/detvNoteLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -380,11 +373,11 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- ขวา (กดได้) -->
                 <TextView
-                    android:id="@+id/tvNoteValue"
+                    android:id="@+id/detvNoteValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -406,8 +399,6 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
 
-                <!-- ซ้าย -->
-
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="25dp"
@@ -416,10 +407,9 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.444"
                     tools:layout_editor_absoluteX="2dp" />
-
-                <!-- ขวา (กดได้) -->
+                <!-- ซ้าย -->
                 <TextView
-                    android:id="@+id/tvLinkLabel"
+                    android:id="@+id/detvLinkLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -428,11 +418,11 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- ขวา (กดได้) -->
                 <TextView
-                    android:id="@+id/tvLinkValue"
+                    android:id="@+id/detvLinkValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -450,6 +440,46 @@
 
     </androidx.cardview.widget.CardView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <!-- ปุ่มลบ -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:elevation="8dp"
+            android:text="ลบงาน"
+            android:textColor="#E53935"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:strokeColor="#E53935"
+            app:strokeWidth="2dp" />
+
+        <!-- ปุ่มเสร็จ -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:elevation="6dp"
+            android:text="งานเสร็จสิ้น"
+            android:textColor="#43A047"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:strokeColor="#43A047"
+            app:strokeWidth="2dp" />
+
+    </LinearLayout>
+
     <!-- SAVE BUTTON -->
     <!--<ImageView
         android:id="@+id/saveButton"
@@ -461,7 +491,7 @@
         app:layout_constraintHorizontal_bias="0.897"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.956" /> -->
+        app:layout_constraintVertical_bias="0.956" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/saveButton"
@@ -476,6 +506,6 @@
         app:backgroundTint="#94b9ff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white" /> -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

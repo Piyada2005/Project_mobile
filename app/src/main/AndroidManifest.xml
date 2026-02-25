@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
         <activity
+            android:name=".StarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TaskDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddTaskActivity"
             android:exported="false" />
         <activity
