@@ -56,4 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.applandeo:material-calendar-view:1.9.0")
 }
