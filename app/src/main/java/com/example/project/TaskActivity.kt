@@ -18,6 +18,7 @@ class TaskActivity : BaseActivity() {
     private lateinit var recyclerCategory: RecyclerView
     private lateinit var recyclerTasks: RecyclerView
 
+
     private val allTasks = mutableListOf<Task>()
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var categoryAdapter: CategoryAdapter
