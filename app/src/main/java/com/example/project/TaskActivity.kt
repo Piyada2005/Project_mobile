@@ -132,10 +132,16 @@ class TaskActivity : BaseActivity() {
     private fun selectCategory(category: String) {
 
         // 1️⃣ กรองข้อมูล
-        val filteredResult = if (category == "ทั้งหมด") {
-            allTasks
-        } else {
-            allTasks.filter { it.category == category }
+        val filteredResult = when (category) {
+            "ทั้งหมด" -> {
+                allTasks
+            }
+            "รายการโปรด" -> {
+                allTasks.filter { it.isStarred }
+            }
+            else -> {
+                allTasks.filter { it.category == category }
+            }
         }
 
         taskAdapter.updateList(filteredResult)

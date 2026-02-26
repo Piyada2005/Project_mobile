@@ -13,6 +13,8 @@ data class Task(
     var note: String? = "",
     var userId: String? = "",
     var createdAt: Timestamp? = null,
+    @get:com.google.firebase.firestore.PropertyName("isStarred")
+    @set:com.google.firebase.firestore.PropertyName("isStarred")
     var isStarred: Boolean = false,
     var id: String = ""
 )
