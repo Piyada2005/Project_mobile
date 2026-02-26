@@ -3,11 +3,15 @@ package com.example.project
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.core.view.GravityCompat
 
 class TaskActivity : BaseActivity() {
 
@@ -15,10 +19,13 @@ class TaskActivity : BaseActivity() {
     private lateinit var recyclerTasks: RecyclerView
 
     private val allTasks = mutableListOf<Task>()
-    // ไม่จำเป็นต้องใช้ displayList แยก ถ้า adapter มีกลไก updateList อยู่แล้ว
     private lateinit var taskAdapter: TaskAdapter
-
+    private lateinit var categoryAdapter: CategoryAdapter
     private val db = FirebaseFirestore.getInstance()
+    private lateinit var drawerLayout: DrawerLayout
+
+    // 🔥 ย้ายมาไว้ระดับ class
+    private val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +40,57 @@ class TaskActivity : BaseActivity() {
 
         recyclerTasks.layoutManager = LinearLayoutManager(this)
 
-        // เริ่มต้นด้วย List ว่างเปล่า
         taskAdapter = TaskAdapter(mutableListOf())
         recyclerTasks.adapter = taskAdapter
 
-        loadTasks()
+        // ✅ ตั้งค่า CategoryAdapter แบบใหม่
+        categoryAdapter = CategoryAdapter(categoryList) { selectedCategory ->
+            selectCategory(selectedCategory)
+        }
+        recyclerCategory.adapter = categoryAdapter
+
+        drawerLayout = findViewById(R.id.drawerLayout)
+
+        findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        // ✅ Drawer เรียก selectCategory เหมือนกันหมด
+        findViewById<LinearLayout>(R.id.menuAll).setOnClickListener {
+            selectCategory("ทั้งหมด")
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        findViewById<LinearLayout>(R.id.menuWork).setOnClickListener {
+            selectCategory("งาน")
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        findViewById<LinearLayout>(R.id.menuFavorite).setOnClickListener {
+            selectCategory("รายการโปรด")
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        findViewById<LinearLayout>(R.id.menuBirthday).setOnClickListener {
+            selectCategory("วันเกิด")
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        findViewById<LinearLayout>(R.id.menuProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        findViewById<LinearLayout>(R.id.menuStar).setOnClickListener {
+            startActivity(Intent(this, StarActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             startActivity(Intent(this, AddTaskActivity::class.java))
         }
 
-        val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
-        recyclerCategory.adapter = CategoryAdapter(categoryList) { selectedCategory ->
-            filterTasks(selectedCategory)
-        }
+        loadTasks()
     }
 
     override fun onResume() {
@@ -66,29 +110,45 @@ class TaskActivity : BaseActivity() {
             .get()
             .addOnSuccessListener { result ->
                 allTasks.clear()
+
                 for (document in result) {
                     val task = document.toObject(Task::class.java)
-                    // เพิ่มบรรทัดนี้เพื่อแอบดูว่ามันแปลงค่าได้ครบไหม หรือเป็น null
-                    Log.d("DEBUG_TASK", "ชื่อ: ${task.title}, หมวด: ${task.category}")
+                    task.id = document.id
                     allTasks.add(task)
                 }
+
                 Log.d("DEBUG_TASK", "Loaded ${allTasks.size} tasks")
-                filterTasks("ทั้งหมด")
+
+                // ✅ โหลดเสร็จให้เลือก "ทั้งหมด"
+                selectCategory("ทั้งหมด")
             }
             .addOnFailureListener { e ->
                 Log.e("DEBUG_TASK", "Error loading tasks", e)
             }
     }
 
-    private fun filterTasks(category: String) {
+    // 🔥 ฟังก์ชันกลางควบคุมทุกอย่าง
+    private fun selectCategory(category: String) {
+
+        // 1️⃣ กรองข้อมูล
         val filteredResult = if (category == "ทั้งหมด") {
             allTasks
         } else {
             allTasks.filter { it.category == category }
         }
 
-        // ตรวจสอบว่าใน TaskAdapter มีฟังก์ชัน updateList(newList: List<Task>)
-        // ที่เรียก notifyDataSetChanged() หรือยัง
         taskAdapter.updateList(filteredResult)
+
+        // 2️⃣ ไฮไลต์หมวด
+        categoryAdapter.setSelectedCategory(category)
+
+        // 3️⃣ เลื่อนไปตำแหน่งหมวดนั้น
+        val position = categoryList.indexOf(category)
+        if (position != -1) {
+            recyclerCategory.smoothScrollToPosition(position)
+        }
+
+        // 4️⃣ เลื่อนรายการงานขึ้นบนสุด
+        recyclerTasks.scrollToPosition(0)
     }
 }

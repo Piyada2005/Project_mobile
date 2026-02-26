@@ -12,5 +12,7 @@ data class Task(
     var repeat: String? = "",
     var note: String? = "",
     var userId: String? = "",
-    var createdAt: Timestamp? = null
+    var createdAt: Timestamp? = null,
+    var isStarred: Boolean = false,
+    var id: String = ""
 )

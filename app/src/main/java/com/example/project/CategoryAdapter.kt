@@ -58,4 +58,13 @@ class CategoryAdapter(
     override fun getItemCount(): Int {
         return categoryList.size
     }
+
+    fun setSelectedCategory(category: String) {
+        val newPosition = categoryList.indexOf(category)
+        if (newPosition != -1) {
+            selectedPosition = newPosition
+            notifyDataSetChanged()
+        }
+    }
+
 }
