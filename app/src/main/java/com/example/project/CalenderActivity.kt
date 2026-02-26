@@ -6,8 +6,11 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 import com.google.firebase.Timestamp
@@ -18,6 +21,10 @@ import java.util.Locale
 class CalenderActivity : BaseActivity() {
 
     private lateinit var calendarView: CalendarView
+    private lateinit var recyclerTasks: RecyclerView
+    private lateinit var taskAdapter: TaskAdapter
+    private val allTasks = mutableListOf<Task>()
+    private var selectedDate: Calendar = Calendar.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +40,13 @@ class CalenderActivity : BaseActivity() {
         }
 
         calendarView = findViewById(R.id.calendarView)
+        recyclerTasks = findViewById(R.id.recyclerTasks)
+
+        recyclerTasks.layoutManager = LinearLayoutManager(this)
+
+        taskAdapter = TaskAdapter(mutableListOf())
+        recyclerTasks.adapter = taskAdapter
+
         val fab = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_add)
 
         fab.setOnClickListener {
@@ -40,7 +54,19 @@ class CalenderActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        calendarView.setOnDayClickListener(object : OnDayClickListener {
+            override fun onDayClick(eventDay: EventDay) {
+                selectedDate = eventDay.calendar
+                applyFilters()
+            }
+        })
+
         // เรียกใช้งานฟังก์ชันดึงข้อมูลมา mark ลงปฏิทิน
+        fetchTasksAndMarkCalendar()
+    }
+
+    override fun onResume() {
+        super.onResume()
         fetchTasksAndMarkCalendar()
     }
 
@@ -56,12 +82,17 @@ class CalenderActivity : BaseActivity() {
             .get()
             .addOnSuccessListener { result ->
                 val events: MutableList<EventDay> = ArrayList()
+                allTasks.clear()
 
                 // 1. ตั้งค่ารูปแบบเป็น วัน(dd) เดือนย่อ(MMM) ปี(yyyy)
-                // 2. ใช้ Locale("th") เพื่อให้อ่าน "ม.ค.", "ก.พ." ออก และยังคงให้ปีเป็น ค.ศ. (2026)
-                val sdf = SimpleDateFormat("dd MMM yyyy", Locale("th"))
+                // 2. ใช้ Locale.getDefault() เพื่อให้อ่านรูปแบบที่บันทึกมาจาก AddTaskActivity ได้ถูกต้อง
+                val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
                 for (document in result) {
+                    val task = document.toObject(Task::class.java)
+                    task.id = document.id
+                    allTasks.add(task)
+
                     try {
                         val dueDateValue = document.get("dueDate")
                         val calendar = Calendar.getInstance()
@@ -91,9 +122,36 @@ class CalenderActivity : BaseActivity() {
                 // นำจุดทั้งหมดไปแสดงบนปฏิทิน
                 calendarView.setEvents(events)
 
+                // เริ่มต้นให้แสดงทั้งหมดทุกครั้งหลัง fetch
+                taskAdapter.updateList(allTasks)
             }
             .addOnFailureListener { exception ->
                 Log.e("CalenderActivity", "Error getting documents: ", exception)
             }
+    }
+
+    private fun applyFilters() {
+        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val filteredByDate = allTasks.filter { task ->
+            try {
+                if (task.dueDate is String) {
+                    val taskDate = sdf.parse(task.dueDate as String)
+                    Log.d("DEBUG_TASK_CALENDAR", "taskDate: $taskDate")
+                    if (taskDate != null) {
+                        val taskCalendar = Calendar.getInstance()
+                        taskCalendar.time = taskDate
+
+                        return@filter taskCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                               taskCalendar.get(Calendar.DAY_OF_YEAR) == selectedDate.get(Calendar.DAY_OF_YEAR)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("CalenderActivity", "Error parsing task date in filter", e)
+            }
+            false
+        }
+
+        taskAdapter.updateList(filteredByDate)
+        recyclerTasks.scrollToPosition(0)
     }
 }
