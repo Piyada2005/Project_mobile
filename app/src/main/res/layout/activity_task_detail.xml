@@ -453,7 +453,7 @@
         <!-- ปุ่มลบ -->
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:elevation="8dp"
@@ -467,10 +467,10 @@
         <!-- ปุ่มเสร็จ -->
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:elevation="6dp"
+            android:elevation="8dp"
             android:text="งานเสร็จสิ้น"
             android:textColor="#43A047"
             app:backgroundTint="@android:color/white"
