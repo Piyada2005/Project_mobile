@@ -16,7 +16,7 @@
         android:layout_width="27dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/arrow_back_ios_24"
+        android:src="@drawable/ic_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
@@ -359,16 +359,16 @@
 
                 <!-- ซ้าย -->
 
+                <!-- ขวา (กดได้) -->
+
                 <ImageView
-                    android:layout_width="31dp"
-                    android:layout_height="27dp"
+                    android:layout_width="27dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="2dp"
                     android:src="@drawable/ic_document"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444"
-                    tools:layout_editor_absoluteX="2dp" />
-
-                <!-- ขวา (กดได้) -->
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tvNoteLabel"
@@ -409,8 +409,8 @@
                 <!-- ซ้าย -->
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="25dp"
+                    android:layout_width="25dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_link"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

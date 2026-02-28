@@ -17,7 +17,7 @@
             android:id="@+id/btnClose"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"/>
+            android:src="@drawable/ic_cancel"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
             android:id="@+id/btnSave"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/checkbox_on_background"
+            android:src="@drawable/ic_check"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 

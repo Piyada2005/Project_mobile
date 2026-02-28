@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/btnClose"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:src="@drawable/ic_cancel"
             android:layout_width="24dp"
             android:layout_height="24dp"/>
 
@@ -30,7 +30,7 @@
 
         <ImageView
             android:id="@+id/btnDone"
-            android:src="@android:drawable/checkbox_on_background"
+            android:src="@drawable/ic_check"
             android:layout_width="24dp"
             android:layout_height="24dp"/>
     </LinearLayout>

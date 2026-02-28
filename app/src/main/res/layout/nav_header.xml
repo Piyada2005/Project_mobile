@@ -39,7 +39,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_profile" />
+            android:src="@drawable/ic_profile" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,12 +73,12 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="ติดดาว"
-            android:textSize="17sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:text="ติดดาว"
+                android:textSize="17sp" />
 
         </LinearLayout>
 
