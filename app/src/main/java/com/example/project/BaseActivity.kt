@@ -4,17 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 
 open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // บังคับภาษาไทยทั้งแอป
-        val locale = LocaleListCompat.forLanguageTags("th")
-        AppCompatDelegate.setApplicationLocales(locale)
-
         super.onCreate(savedInstanceState)
     }
 
