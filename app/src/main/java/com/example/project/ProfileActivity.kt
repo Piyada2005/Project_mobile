@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class ProfileActivity : BaseActivity() {
         val btnLogout = findViewById<MaterialButton>(R.id.btnLogout)
 
         btnLogout.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
 
             // ล้างข้อมูล login ถ้ามี SharedPreferences
             val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -34,10 +36,8 @@ class ProfileActivity : BaseActivity() {
 
             // ไปหน้า Login
             val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
-
-            // ปิดหน้าปัจจุบัน
-            finish()
         }
     }
 }
