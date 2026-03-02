@@ -42,8 +42,9 @@ class AddTaskActivity : AppCompatActivity() {
 
     private val subtaskList = mutableListOf<String>()
     private lateinit var adapter: SubtaskAdapter
-
     private var selectedCategory = "ไม่มีหมวดหมู่"
+    private var attachedLink: String = ""
+    private var attachedImageUri: String = ""
 
     // private val txtDueValue = findViewById<TextView>(R.id.txtDueValue)
     // private val txtTimeValue = findViewById<TextView>(R.id.txtTimeValue)
@@ -306,6 +307,9 @@ class AddTaskActivity : AppCompatActivity() {
                 "notify" to txtNotifyValue.text.toString(),
                 "repeat" to txtRepeatValue.text.toString(),
                 "note" to txtNote.text.toString(),
+                "link" to attachedLink,
+                "imageUri" to attachedImageUri,
+                "subtasks" to subtaskList,
                 "userId" to userId,
                 "createdAt" to FieldValue.serverTimestamp()
             )
@@ -341,11 +345,13 @@ class AddTaskActivity : AppCompatActivity() {
                 .show()
         }
 
+
     }
 
     private val imagePicker =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
+                attachedImageUri = uri.toString()
                 findViewById<TextView>(R.id.tvLinkValue).text = "เลือกรูปแล้ว"
             }
         }
@@ -383,18 +389,24 @@ class AddTaskActivity : AppCompatActivity() {
 
         val edit = view.findViewById<EditText>(R.id.editLink)
 
+        edit.setText(attachedLink)
+
         AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
             .setView(view)
-            .setPositiveButton("เพิ่ม") { _, _ ->
-                val link = edit.text.toString()
+            .setPositiveButton("บันทึก") { _, _ ->
+                val link = edit.text.toString().trim()
+
                 if (link.isNotEmpty()) {
+                    attachedLink = link
                     findViewById<TextView>(R.id.tvLinkValue).text = link
                 }
             }
             .setNegativeButton("ยกเลิก", null)
             .show()
     }
+
+
 
     // txtDueValue.setOnClickListener {
     //     // ยังไม่ต้องทำ action

@@ -17,15 +17,11 @@ class TaskActivity : BaseActivity() {
 
     private lateinit var recyclerCategory: RecyclerView
     private lateinit var recyclerTasks: RecyclerView
-
-
     private val allTasks = mutableListOf<Task>()
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var categoryAdapter: CategoryAdapter
     private val db = FirebaseFirestore.getInstance()
     private lateinit var drawerLayout: DrawerLayout
-
-    // 🔥 ย้ายมาไว้ระดับ class
     private val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
 
     override fun onCreate(savedInstanceState: Bundle?) {

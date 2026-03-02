@@ -11,6 +11,9 @@ data class Task(
     var notify: String? = "",
     var repeat: String? = "",
     var note: String? = "",
+    var link: String? = "",
+    var imageUri: String? = "",
+
     var userId: String? = "",
     var createdAt: Timestamp? = null,
     @get:com.google.firebase.firestore.PropertyName("isStarred")

@@ -1,6 +1,7 @@
 package com.example.project
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +64,13 @@ class TaskAdapter(
                     // ถ้าอัปเดตไม่สำเร็จ อาจจะเขียนโค้ดสลับสถานะกลับ หรือแจ้งเตือนผู้ใช้ตรงนี้ได้ครับ
                 }
         }
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, TaskDetailActivity::class.java)
+            intent.putExtra("taskId", task.id)
+            holder.itemView.context.startActivity(intent)
+        }
+
     }
 
     override fun getItemCount(): Int = taskList.size
