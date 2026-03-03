@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class ProfileActivity : BaseActivity() {
 
@@ -58,7 +59,7 @@ class ProfileActivity : BaseActivity() {
         // ===== โหลดข้อมูล =====
         db.collection("users").document(userId).get()
             .addOnSuccessListener { doc ->
-                etName.setText(doc.getString("name") ?: "")
+                etName.setText(doc.getString("username") ?: doc.getString("name") ?: "")
 
                 val savedImage = doc.getString("imageUri")
                 if (!savedImage.isNullOrEmpty()) {
@@ -151,11 +152,11 @@ class ProfileActivity : BaseActivity() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         val data = hashMapOf(
-            "name" to etName.text.toString(),
+            "username" to etName.text.toString(),
             "imageUri" to imageUri
         )
 
         db.collection("users").document(userId)
-            .set(data)
+            .set(data, SetOptions.merge())
     }
 }
