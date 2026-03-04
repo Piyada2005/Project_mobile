@@ -14,6 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -24,6 +28,7 @@ class ProfileActivity : BaseActivity() {
     private lateinit var etName: EditText
     private lateinit var tvCompletedCount: TextView
     private lateinit var tvPendingCount: TextView
+    private lateinit var pieChart: PieChart
 
     private val db = FirebaseFirestore.getInstance()
     private var imageUri: String = ""
@@ -58,6 +63,8 @@ class ProfileActivity : BaseActivity() {
         etName = findViewById(R.id.etName)
         tvCompletedCount = findViewById(R.id.tvCompletedCount)
         tvPendingCount = findViewById(R.id.tvPendingCount)
+        pieChart = findViewById(R.id.pieChart)
+        setupPieChart()
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -184,6 +191,44 @@ class ProfileActivity : BaseActivity() {
                 }
                 tvCompletedCount.text = completed.toString()
                 tvPendingCount.text = pending.toString()
+                updatePieChart(completed, pending)
             }
+    }
+
+    private fun setupPieChart() {
+        pieChart.description.isEnabled = false
+        pieChart.legend.isEnabled = false
+        pieChart.setUsePercentValues(false)
+        pieChart.isDrawHoleEnabled = true
+        pieChart.holeRadius = 62f
+        pieChart.transparentCircleRadius = 66f
+        pieChart.setHoleColor(Color.WHITE)
+        pieChart.setDrawEntryLabels(false)
+        pieChart.setCenterTextSize(12f)
+        pieChart.setCenterTextColor(Color.parseColor("#666666"))
+    }
+
+    private fun updatePieChart(completed: Int, pending: Int) {
+        val entries = mutableListOf<PieEntry>()
+        if (completed > 0) entries.add(PieEntry(completed.toFloat(), "เสร็จ"))
+        if (pending > 0) entries.add(PieEntry(pending.toFloat(), "ค้าง"))
+        if (entries.isEmpty()) entries.add(PieEntry(1f, "ไม่มีงาน"))
+
+        val colors = if (completed == 0 && pending == 0) {
+            listOf(Color.parseColor("#DCEBFF"))
+        } else {
+            listOf(Color.parseColor("#2F80ED"), Color.parseColor("#9FC5FF"))
+        }
+
+        val dataSet = PieDataSet(entries, "").apply {
+            this.colors = colors
+            sliceSpace = 3f
+        }
+
+        pieChart.data = PieData(dataSet).apply {
+            setDrawValues(false)
+        }
+        pieChart.centerText = "${completed + pending}\nงาน"
+        pieChart.invalidate()
     }
 }
