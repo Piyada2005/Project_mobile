@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.app.TimePickerDialog
 import android.content.res.Resources
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.RadioButton
@@ -90,7 +91,7 @@ class AddTaskActivity : AppCompatActivity() {
 
             val edit = view.findViewById<EditText>(R.id.editSubtask)
 
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                 .setTitle("เพิ่มงานย่อย")
                 .setView(view)
                 .setPositiveButton("เพิ่ม") { _, _ ->
@@ -102,7 +103,16 @@ class AddTaskActivity : AppCompatActivity() {
                     }
                 }
                 .setNegativeButton("ยกเลิก", null)
-                .show()
+                .create()
+
+            dialog.show()
+
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+            dialog.window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.85).toInt(),  // กว้าง 85% ของจอ
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         txtDueValue.setOnClickListener {
@@ -332,13 +342,22 @@ class AddTaskActivity : AppCompatActivity() {
                 "วันเกิด"
             )
 
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                 .setTitle("เลือกหมวดหมู่")
                 .setItems(categories) { _, which ->
                     selectedCategory = categories[which]
                     tvCategoryValue.text = selectedCategory
                 }
-                .show()
+                .create()
+
+            dialog.show()
+
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+            dialog.window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.85).toInt(),  // กว้าง 85% ของจอ
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
 
@@ -387,7 +406,7 @@ class AddTaskActivity : AppCompatActivity() {
 
         edit.setText(attachedLink)
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
             .setView(view)
             .setPositiveButton("บันทึก") { _, _ ->
@@ -399,7 +418,17 @@ class AddTaskActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton("ยกเลิก", null)
-            .show()
+            .create()
+
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),  // กว้าง 85% ของจอ
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
     }
 
 

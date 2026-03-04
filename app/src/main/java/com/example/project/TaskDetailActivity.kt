@@ -3,10 +3,14 @@ package com.example.project
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -28,11 +32,13 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvNote: TextView
     private lateinit var tvCategory: TextView
     private lateinit var tvLink: TextView
-
     private var taskId: String? = null
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
-
+    private lateinit var btnAddSubtask: TextView
+    private lateinit var recyclerSubtask: RecyclerView
+    private lateinit var adapter: SubtaskAdapter
+    private val subtaskList = mutableListOf<String>()
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +65,13 @@ class TaskDetailActivity : AppCompatActivity() {
         tvLink = findViewById(R.id.detvLinkValue)
 
         findViewById<ImageView>(R.id.debtnBack).setOnClickListener { finish() }
+        btnAddSubtask = findViewById(R.id.deaddSubtask)
+        recyclerSubtask = findViewById(R.id.derecyclerSubtask)
+
+        adapter = SubtaskAdapter(subtaskList)
+        recyclerSubtask.adapter = adapter
+        recyclerSubtask.layoutManager = LinearLayoutManager(this)
+        recyclerSubtask.visibility = View.GONE
     }
 
     private fun setupListeners() {
@@ -78,11 +91,17 @@ class TaskDetailActivity : AppCompatActivity() {
         tvNote.setOnClickListener { openNoteBottomSheet() }
         tvCategory.setOnClickListener { openCategoryDialog() }
         tvLink.setOnClickListener { showAttachmentBottomSheet() }
+
+        btnAddSubtask.setOnClickListener {
+            openAddSubtaskDialog()
+        }
     }
 
     private fun loadTask(id: String) {
+
         db.collection("tasks").document(id).get()
             .addOnSuccessListener { doc ->
+
                 val task = doc.toObject(Task::class.java) ?: return@addOnSuccessListener
 
                 etTitle.setText(task.title)
@@ -97,6 +116,19 @@ class TaskDetailActivity : AppCompatActivity() {
 
                 attachedLink = task.link ?: ""
                 attachedImageUri = task.imageUri ?: ""
+
+                // ✅ โหลด subtasks ตรงนี้เท่านั้น
+                val subtasks = doc.get("subtasks") as? List<String>
+
+                subtaskList.clear()
+                subtasks?.let {
+                    subtaskList.addAll(it)
+                }
+
+                recyclerSubtask.visibility =
+                    if (subtaskList.isEmpty()) View.GONE else View.VISIBLE
+
+                adapter.notifyDataSetChanged()
             }
     }
 
@@ -271,7 +303,7 @@ class TaskDetailActivity : AppCompatActivity() {
         val edit = view.findViewById<EditText>(R.id.editLink)
         edit.setText(attachedLink)
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
             .setView(view)
             .setPositiveButton("บันทึก") { _, _ ->
@@ -281,7 +313,16 @@ class TaskDetailActivity : AppCompatActivity() {
                 updateTask("link", link)
             }
             .setNegativeButton("ยกเลิก", null)
-            .show()
+            .create()
+
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     private val imagePicker =
@@ -298,13 +339,60 @@ class TaskDetailActivity : AppCompatActivity() {
 
         val categories = arrayOf("ไม่มีหมวดหมู่", "งาน", "รายการโปรด", "วันเกิด")
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("เลือกหมวดหมู่")
             .setItems(categories) { _, which ->
                 tvCategory.text = categories[which]
                 updateTask("category", categories[which])
             }
-            .show()
+            .create()
+
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    // ================= SUBTASK =================
+
+    private fun openAddSubtaskDialog() {
+
+        val view = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_add_subtask, null)
+
+        val edit = view.findViewById<EditText>(R.id.editSubtask)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("เพิ่มงานย่อย")
+            .setView(view)
+            .setPositiveButton("เพิ่ม") { _, _ ->
+                val text = edit.text.toString().trim()
+                if (text.isNotEmpty()) {
+                    addSubtask(text)
+                }
+            }
+            .setNegativeButton("ยกเลิก", null)
+            .create()
+
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
+
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    private fun addSubtask(text: String) {
+        subtaskList.add(text)
+        recyclerSubtask.visibility = View.VISIBLE
+        adapter.notifyDataSetChanged()
+        updateSubtasks()
     }
 
     private fun updateTask(field: String, value: String) {
@@ -312,4 +400,14 @@ class TaskDetailActivity : AppCompatActivity() {
             db.collection("tasks").document(it).update(field, value)
         }
     }
+
+    private fun updateSubtasks() {
+        taskId?.let {
+            db.collection("tasks")
+                .document(it)
+                .update("subtasks", subtaskList)
+        }
+    }
+
+
 }
