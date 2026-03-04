@@ -132,8 +132,10 @@
             <!-- วันที่ครบกำหนด -->
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="3dp"
                 android:src="@drawable/ic_menu_my_calendar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -166,13 +168,14 @@
             <!-- เวลา -->
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_clock"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.328" />
+                app:layout_constraintVertical_bias="0.322" />
 
             <TextView
                 android:id="@+id/txtTimeLabel"
@@ -204,13 +207,14 @@
 
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_notification"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.648" />
+                app:layout_constraintVertical_bias="0.637" />
 
             <TextView
                 android:id="@+id/txtNotifyLabel"
@@ -242,13 +246,14 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_repeat"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.976" />
+                app:layout_constraintVertical_bias="0.96" />
 
             <TextView
                 android:id="@+id/txtRepeatLabel"
@@ -315,8 +320,8 @@
                 <!-- ขวา -->
 
                 <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="22dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_border"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -362,8 +367,8 @@
                 <!-- ขวา (กดได้) -->
 
                 <ImageView
-                    android:layout_width="27dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="2dp"
                     android:src="@drawable/ic_document"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -409,8 +414,8 @@
                 <!-- ซ้าย -->
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_link"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

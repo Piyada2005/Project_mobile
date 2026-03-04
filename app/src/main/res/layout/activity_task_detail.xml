@@ -132,8 +132,10 @@
             <!-- วันที่ครบกำหนด -->
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="3dp"
                 android:src="@drawable/ic_menu_my_calendar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -166,8 +168,9 @@
             <!-- เวลา -->
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_clock"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -204,8 +207,9 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_notification"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -242,8 +246,9 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="26dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_repeat"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -308,16 +313,17 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
 
+                <!-- ซ้าย -->
+
                 <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="22dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_border"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444"
-                    tools:layout_editor_absoluteX="2dp" />
+                    app:layout_constraintVertical_bias="0.454"
+                    tools:layout_editor_absoluteX="6dp" />
 
-                <!-- ซ้าย -->
                 <TextView
                     android:id="@+id/detvCategoryLabel"
                     android:layout_width="wrap_content"
@@ -353,16 +359,16 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
 
+                <!-- ซ้าย -->
                 <ImageView
-                    android:layout_width="31dp"
-                    android:layout_height="27dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_document"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444"
-                    tools:layout_editor_absoluteX="2dp" />
+                    app:layout_constraintVertical_bias="0.454"
+                    tools:layout_editor_absoluteX="6dp" />
 
-                <!-- ซ้าย -->
                 <TextView
                     android:id="@+id/detvNoteLabel"
                     android:layout_width="wrap_content"
@@ -399,15 +405,16 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp">
 
+                <!-- ซ้าย -->
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_link"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444"
-                    tools:layout_editor_absoluteX="2dp" />
-                <!-- ซ้าย -->
+                    app:layout_constraintVertical_bias="0.454"
+                    tools:layout_editor_absoluteX="6dp" />
+
                 <TextView
                     android:id="@+id/detvLinkLabel"
                     android:layout_width="wrap_content"

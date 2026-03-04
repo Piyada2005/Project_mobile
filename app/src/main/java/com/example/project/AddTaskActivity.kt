@@ -46,15 +46,11 @@ class AddTaskActivity : AppCompatActivity() {
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
 
-    // private val txtDueValue = findViewById<TextView>(R.id.txtDueValue)
-    // private val txtTimeValue = findViewById<TextView>(R.id.txtTimeValue)
-    // private val txtNotifyValue = findViewById<TextView>(R.id.txtNotifyValue)
-    // private val txtRepeatValue = findViewById<TextView>(R.id.txtRepeatValue)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_task)
+
 
         val tvLinkValue = findViewById<TextView>(R.id.tvLinkValue)
 
@@ -408,15 +404,4 @@ class AddTaskActivity : AppCompatActivity() {
 
 
 
-    // txtDueValue.setOnClickListener {
-    //     // ยังไม่ต้องทำ action
-    // }
-
-
-
-    // txtNotifyValue.setOnClickListener {
-    // }
-
-    // txtRepeatValue.setOnClickListener {
-    // }
 }

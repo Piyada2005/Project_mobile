@@ -42,7 +42,7 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_agenda" />
 
                     <TextView
@@ -67,7 +67,7 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_menu_my_calendar" />
 
                     <TextView
@@ -92,7 +92,7 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_profile" />
 
                     <TextView
