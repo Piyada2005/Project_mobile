@@ -91,6 +91,9 @@ class CalenderActivity : BaseActivity() {
                 for (document in result) {
                     val task = document.toObject(Task::class.java)
                     task.id = document.id
+                    if (task.isFinished) {
+                        continue
+                    }
                     allTasks.add(task)
 
                     try {

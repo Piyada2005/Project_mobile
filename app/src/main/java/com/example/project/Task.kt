@@ -19,5 +19,8 @@ data class Task(
     @get:com.google.firebase.firestore.PropertyName("isStarred")
     @set:com.google.firebase.firestore.PropertyName("isStarred")
     var isStarred: Boolean = false,
+    @get:com.google.firebase.firestore.PropertyName("isFinished")
+    @set:com.google.firebase.firestore.PropertyName("isFinished")
+    var isFinished: Boolean = false,
     var id: String = ""
 )

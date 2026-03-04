@@ -111,7 +111,9 @@ class TaskActivity : BaseActivity() {
                 for (document in result) {
                     val task = document.toObject(Task::class.java)
                     task.id = document.id
-                    allTasks.add(task)
+                    if (!task.isFinished) {
+                        allTasks.add(task)
+                    }
                 }
 
                 Log.d("DEBUG_TASK", "Loaded ${allTasks.size} tasks")

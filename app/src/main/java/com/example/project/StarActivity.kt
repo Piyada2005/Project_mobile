@@ -52,7 +52,9 @@ class StarActivity : AppCompatActivity() {
                     val task = document.toObject(Task::class.java)
                     task.id = document.id   // ⭐ สำคัญมาก
 
-                    starList.add(task)
+                    if (!task.isFinished) {
+                        starList.add(task)
+                    }
                 }
 
                 taskAdapter.notifyDataSetChanged()

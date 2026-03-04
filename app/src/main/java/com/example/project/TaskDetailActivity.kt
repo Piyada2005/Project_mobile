@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.google.android.material.button.MaterialButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -36,6 +37,8 @@ class TaskDetailActivity : AppCompatActivity() {
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
     private lateinit var btnAddSubtask: TextView
+    private lateinit var btnDeleteTask: MaterialButton
+    private lateinit var btnCompleteTask: MaterialButton
     private lateinit var recyclerSubtask: RecyclerView
     private lateinit var adapter: SubtaskAdapter
     private val subtaskList = mutableListOf<String>()
@@ -66,6 +69,8 @@ class TaskDetailActivity : AppCompatActivity() {
 
         findViewById<ImageView>(R.id.debtnBack).setOnClickListener { finish() }
         btnAddSubtask = findViewById(R.id.deaddSubtask)
+        btnDeleteTask = findViewById(R.id.debtnDeleteTask)
+        btnCompleteTask = findViewById(R.id.debtnCompleteTask)
         recyclerSubtask = findViewById(R.id.derecyclerSubtask)
 
         adapter = SubtaskAdapter(subtaskList)
@@ -95,6 +100,8 @@ class TaskDetailActivity : AppCompatActivity() {
         btnAddSubtask.setOnClickListener {
             openAddSubtaskDialog()
         }
+        btnDeleteTask.setOnClickListener { deleteTask() }
+        btnCompleteTask.setOnClickListener { completeTask() }
     }
 
     private fun loadTask(id: String) {
@@ -407,6 +414,28 @@ class TaskDetailActivity : AppCompatActivity() {
                 .document(it)
                 .update("subtasks", subtaskList)
         }
+    }
+
+    private fun deleteTask() {
+        val id = taskId ?: return
+        db.collection("tasks")
+            .document(id)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(this, "ลบงานเรียบร้อย", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+    }
+
+    private fun completeTask() {
+        val id = taskId ?: return
+        db.collection("tasks")
+            .document(id)
+            .update("isFinished", true)
+            .addOnSuccessListener {
+                Toast.makeText(this, "งานเสร็จสิ้นแล้ว", Toast.LENGTH_SHORT).show()
+                finish()
+            }
     }
 
 

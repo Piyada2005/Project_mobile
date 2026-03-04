@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
@@ -21,6 +22,8 @@ class ProfileActivity : BaseActivity() {
 
     private lateinit var imgProfile: ImageView
     private lateinit var etName: EditText
+    private lateinit var tvCompletedCount: TextView
+    private lateinit var tvPendingCount: TextView
 
     private val db = FirebaseFirestore.getInstance()
     private var imageUri: String = ""
@@ -53,6 +56,8 @@ class ProfileActivity : BaseActivity() {
         // ===== Profile Views =====
         imgProfile = findViewById(R.id.imgProfile)
         etName = findViewById(R.id.etName)
+        tvCompletedCount = findViewById(R.id.tvCompletedCount)
+        tvPendingCount = findViewById(R.id.tvPendingCount)
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -67,6 +72,7 @@ class ProfileActivity : BaseActivity() {
                     imageUri = savedImage
                 }
             }
+        loadTaskStats(userId)
 
         // ===== กดรูป =====
         imgProfile.setOnClickListener {
@@ -77,6 +83,11 @@ class ProfileActivity : BaseActivity() {
         etName.setOnClickListener {
             showNameDialog()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FirebaseAuth.getInstance().currentUser?.uid?.let { loadTaskStats(it) }
     }
 
     // ===== Image Picker =====
@@ -158,5 +169,21 @@ class ProfileActivity : BaseActivity() {
 
         db.collection("users").document(userId)
             .set(data, SetOptions.merge())
+    }
+
+    private fun loadTaskStats(userId: String) {
+        db.collection("tasks")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                var completed = 0
+                var pending = 0
+                for (document in result) {
+                    val isFinished = document.getBoolean("isFinished") ?: false
+                    if (isFinished) completed++ else pending++
+                }
+                tvCompletedCount.text = completed.toString()
+                tvPendingCount.text = pending.toString()
+            }
     }
 }

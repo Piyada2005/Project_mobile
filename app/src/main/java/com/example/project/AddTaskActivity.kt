@@ -317,6 +317,7 @@ class AddTaskActivity : AppCompatActivity() {
                 "imageUri" to attachedImageUri,
                 "subtasks" to subtaskList,
                 "userId" to userId,
+                "isFinished" to false,
                 "createdAt" to FieldValue.serverTimestamp()
             )
 
