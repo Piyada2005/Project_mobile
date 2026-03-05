@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,7 +38,11 @@ class ProfileActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_profile)
+
         setupBottomBar()
+
+        val menuProfile = findViewById<LinearLayout>(R.id.menu_profile)
+        menuProfile.setBackgroundResource(R.drawable.segmented_selected_bg)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context=".RegisterActivity">
 
     <ImageView
@@ -36,59 +37,31 @@
         android:id="@+id/redt_username"
         android:layout_width="273dp"
         android:layout_height="51dp"
+        android:background="@drawable/edittext_bg"
         android:ems="10"
         android:hint="ชื่อผู้ใช้"
         android:inputType="textPersonName"
+        android:paddingStart="16dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.392" />
+        app:layout_constraintVertical_bias="0.42" />
 
-    <EditText
-        android:id="@+id/redt_email"
-        android:layout_width="273dp"
+    <TextView
+        android:id="@+id/txt_signin"
+        android:layout_width="275dp"
         android:layout_height="51dp"
-        android:ems="10"
-        android:hint="หมายเลขโทรศัพท์มือถือหรืออีเมล"
-        android:inputType="text"
-        android:textSize="14sp"
+        android:gravity="center"
+        android:text="เข้าสู่ระบบบัญชี"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495" />
-
-    <EditText
-        android:id="@+id/redt_pass"
-        android:layout_width="274dp"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:hint="รหัสผ่าน"
-        android:inputType="textPassword"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.598" />
-
-    <EditText
-        android:id="@+id/redt_cPass"
-        android:layout_width="274dp"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:hint="ยืนยันรหัสผ่าน"
-        android:inputType="textPassword"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.7" />
+        app:layout_constraintVertical_bias="0.925" />
 
     <Button
         android:id="@+id/rbtn_acc"
@@ -99,19 +72,60 @@
         android:textColorLink="#331C1C"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.808" />
+        app:layout_constraintVertical_bias="0.836" />
 
-    <TextView
-        android:id="@+id/txt_signin"
-        android:layout_width="275dp"
-        android:layout_height="51dp"
-        android:gravity="center"
-        android:text="เข้าสู่ระบบบัญชี"
+    <EditText
+        android:id="@+id/redt_cPass"
+        android:layout_width="274dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="ยืนยันรหัสผ่าน"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.896" />
+        app:layout_constraintVertical_bias="0.728" />
+
+    <EditText
+        android:id="@+id/redt_pass"
+        android:layout_width="274dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="รหัสผ่าน"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.627" />
+
+    <EditText
+        android:id="@+id/redt_email"
+        android:layout_width="273dp"
+        android:layout_height="51dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="หมายเลขโทรศัพท์มือถือหรืออีเมล"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.523" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

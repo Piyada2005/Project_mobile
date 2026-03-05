@@ -32,9 +32,9 @@
                 <LinearLayout
                     android:id="@+id/menu_tasks"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_margin="15dp"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -49,17 +49,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="งาน"
-                        android:textSize="13sp"
-                        android:textColor="#000000"/>
+                        android:textColor="#000000"
+                        android:textSize="13sp" />
+
                 </LinearLayout>
 
                 <!-- ปฏิทิน -->
                 <LinearLayout
                     android:id="@+id/menu_calendar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="10dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="15dp"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -74,17 +75,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ปฏิทิน"
-                        android:textSize="13sp"
-                        android:textColor="#000000"/>
+                        android:textColor="#000000"
+                        android:textSize="13sp" />
+
                 </LinearLayout>
 
                 <!-- ของฉัน -->
                 <LinearLayout
                     android:id="@+id/menu_profile"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_margin="15dp"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -101,6 +103,7 @@
                         android:text="ของฉัน"
                         android:textColor="#000000"
                         android:textSize="13sp" />
+
                 </LinearLayout>
 
             </LinearLayout>

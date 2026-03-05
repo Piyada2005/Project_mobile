@@ -3,6 +3,7 @@ package com.example.project
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -31,7 +32,11 @@ class CalenderActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_calender)
+
         setupBottomBar()
+
+        val menuCalendar = findViewById<LinearLayout>(R.id.menu_calendar)
+        menuCalendar.setBackgroundResource(R.drawable.segmented_selected_bg)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

@@ -27,7 +27,11 @@ class TaskActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
+
         setupBottomBar()
+
+        val menuTask = findViewById<LinearLayout>(R.id.menu_tasks)
+        menuTask.setBackgroundResource(R.drawable.segmented_selected_bg)
 
         recyclerCategory = findViewById(R.id.recyclerCategory)
         recyclerTasks = findViewById(R.id.recyclerTasks)

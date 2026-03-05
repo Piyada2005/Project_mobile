@@ -5,12 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f2f2f2"
     tools:context=".LoginActivity">
 
     <Button
         android:id="@+id/btn_signin"
         android:layout_width="275dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:backgroundTint="#94b9ff"
         android:text="เข้าสู่ระบบ"
         android:textColorLink="#331C1C"
@@ -34,8 +35,10 @@
 
     <EditText
         android:id="@+id/inp_email"
-        android:layout_width="273dp"
-        android:layout_height="51dp"
+        android:layout_width="275dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_bg"
+        android:paddingStart="16dp"
         android:ems="10"
         android:hint="หมายเลขโทรศัพท์มือถือหรืออีเมล"
         android:inputType="text"
@@ -47,9 +50,11 @@
 
     <EditText
         android:id="@+id/inp_pass"
-        android:layout_width="274dp"
+        android:layout_width="275dp"
         android:layout_height="50dp"
+        android:background="@drawable/edittext_bg"
         android:ems="10"
+        android:paddingStart="16dp"
         android:hint="รหัสผ่าน"
         android:inputType="textPassword"
         android:textSize="14sp"
@@ -63,7 +68,7 @@
     <TextView
         android:id="@+id/txt_create"
         android:layout_width="275dp"
-        android:layout_height="51dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:text="สร้างบัญชีใหม่"
         app:layout_constraintBottom_toBottomOf="parent"
