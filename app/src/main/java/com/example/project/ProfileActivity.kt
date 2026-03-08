@@ -190,13 +190,22 @@ class ProfileActivity : BaseActivity() {
             .addOnSuccessListener { result ->
                 var completed = 0
                 var pending = 0
+                var workCategoryCount = 0
+                var favoriteCategoryCount = 0
+                var birthdayCategoryCount = 0
                 for (document in result) {
                     val isFinished = document.getBoolean("isFinished") ?: false
+                    val category = document.getString("category").orEmpty()
                     if (isFinished) completed++ else pending++
+                    when (category) {
+                        "งาน" -> workCategoryCount++
+                        "รายการโปรด" -> favoriteCategoryCount++
+                        "วันเกิด", "วันเกิน" -> birthdayCategoryCount++
+                    }
                 }
                 tvCompletedCount.text = completed.toString()
                 tvPendingCount.text = pending.toString()
-                updatePieChart(completed, pending)
+                updatePieChart(workCategoryCount, favoriteCategoryCount, birthdayCategoryCount)
             }
     }
 
@@ -213,16 +222,26 @@ class ProfileActivity : BaseActivity() {
         pieChart.setCenterTextColor(Color.parseColor("#666666"))
     }
 
-    private fun updatePieChart(completed: Int, pending: Int) {
+    private fun updatePieChart(workCategoryCount: Int, favoriteCategoryCount: Int, birthdayCategoryCount: Int) {
         val entries = mutableListOf<PieEntry>()
-        if (completed > 0) entries.add(PieEntry(completed.toFloat(), "เสร็จ"))
-        if (pending > 0) entries.add(PieEntry(pending.toFloat(), "ค้าง"))
-        if (entries.isEmpty()) entries.add(PieEntry(1f, "ไม่มีงาน"))
+        val colors = mutableListOf<Int>()
 
-        val colors = if (completed == 0 && pending == 0) {
-            listOf(Color.parseColor("#DCEBFF"))
-        } else {
-            listOf(Color.parseColor("#2F80ED"), Color.parseColor("#9FC5FF"))
+        if (workCategoryCount > 0) {
+            entries.add(PieEntry(workCategoryCount.toFloat(), "งาน"))
+            colors.add(Color.parseColor("#2F80ED"))
+        }
+        if (favoriteCategoryCount > 0) {
+            entries.add(PieEntry(favoriteCategoryCount.toFloat(), "รายการโปรด"))
+            colors.add(Color.parseColor("#9FC5FF"))
+        }
+        if (birthdayCategoryCount > 0) {
+            entries.add(PieEntry(birthdayCategoryCount.toFloat(), "วันเกิน"))
+            colors.add(Color.parseColor("#5D9CFF"))
+        }
+
+        if (entries.isEmpty()) {
+            entries.add(PieEntry(1f, "ไม่มีงาน"))
+            colors.add(Color.parseColor("#DCEBFF"))
         }
 
         val dataSet = PieDataSet(entries, "").apply {
@@ -233,7 +252,7 @@ class ProfileActivity : BaseActivity() {
         pieChart.data = PieData(dataSet).apply {
             setDrawValues(false)
         }
-        pieChart.centerText = "${completed + pending}\nงาน"
+        pieChart.centerText = "${workCategoryCount + favoriteCategoryCount + birthdayCategoryCount}\nงาน"
         pieChart.invalidate()
     }
 }

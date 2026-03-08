@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- Card งานที่เสร็จแล้ว -->
+            <!-- Card หมวดหมู่งาน -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="งานที่เสร็จแล้ว"
+                            android:text="หมวดหมู่งาน"
                             android:textStyle="bold" />
 
                         <TextView
@@ -154,7 +154,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="งานเสร็จสิ้น"
+                                    android:text="งาน"
                                     android:textColor="#666666"
                                     android:textSize="13sp" />
                             </LinearLayout>
@@ -176,7 +176,29 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="งานที่ยังไม่เสร็จ"
+                                    android:text="รายการโปรด"
+                                    android:textColor="#666666"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:background="@drawable/bg_circle"
+                                    android:backgroundTint="#5D9CFF" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="วันเกิน"
                                     android:textColor="#666666"
                                     android:textSize="13sp" />
                             </LinearLayout>

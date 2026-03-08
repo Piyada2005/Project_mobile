@@ -392,20 +392,26 @@
                     android:textSize="16sp"
                     android:clickable="true"
                     android:focusable="true"
+                    app:layout_constraintBaseline_toBaselineOf="@id/detvNoteLabel"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    />
 
                 <!-- ข้อความหมายเหตุ -->
                 <TextView
                     android:id="@+id/detvNoteValue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:gravity="end"
+                    android:maxLines="1"
                     android:textColor="#444444"
                     android:textSize="15sp"
                     android:visibility="gone"
-                    android:layout_marginTop="6dp"
-                    app:layout_constraintStart_toStartOf="@id/detvNoteLabel"
-                    app:layout_constraintTop_toBottomOf="@id/detvNoteLabel"
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/detvNoteLabel"
+                    app:layout_constraintStart_toEndOf="@id/detvNoteLabel"
                     app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
