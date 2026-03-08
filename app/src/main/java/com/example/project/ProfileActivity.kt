@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.android.material.card.MaterialCardView
 
 class ProfileActivity : BaseActivity() {
 
@@ -30,6 +31,8 @@ class ProfileActivity : BaseActivity() {
     private lateinit var tvCompletedCount: TextView
     private lateinit var tvPendingCount: TextView
     private lateinit var pieChart: PieChart
+    private lateinit var cardCompletedTasks: MaterialCardView
+    private lateinit var cardPendingTasks: MaterialCardView
 
     private val db = FirebaseFirestore.getInstance()
     private var imageUri: String = ""
@@ -69,7 +72,10 @@ class ProfileActivity : BaseActivity() {
         tvCompletedCount = findViewById(R.id.tvCompletedCount)
         tvPendingCount = findViewById(R.id.tvPendingCount)
         pieChart = findViewById(R.id.pieChart)
+        cardCompletedTasks = findViewById(R.id.cardCompletedTasks)
+        cardPendingTasks = findViewById(R.id.cardPendingTasks)
         setupPieChart()
+        setupStatusCardNavigation()
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -207,6 +213,24 @@ class ProfileActivity : BaseActivity() {
                 tvPendingCount.text = pending.toString()
                 updatePieChart(workCategoryCount, favoriteCategoryCount, birthdayCategoryCount)
             }
+    }
+
+    private fun setupStatusCardNavigation() {
+        cardCompletedTasks.setOnClickListener {
+            val intent = Intent(this, CompletedTaskActivity::class.java).apply {
+                putExtra(CompletedTaskActivity.EXTRA_IS_FINISHED, true)
+                putExtra(CompletedTaskActivity.EXTRA_TITLE, "งานที่เสร็จสมบูรณ์")
+            }
+            startActivity(intent)
+        }
+
+        cardPendingTasks.setOnClickListener {
+            val intent = Intent(this, CompletedTaskActivity::class.java).apply {
+                putExtra(CompletedTaskActivity.EXTRA_IS_FINISHED, false)
+                putExtra(CompletedTaskActivity.EXTRA_TITLE, "งานที่ยังไม่เสร็จ")
+            }
+            startActivity(intent)
+        }
     }
 
     private fun setupPieChart() {
