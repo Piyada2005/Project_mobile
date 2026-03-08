@@ -12,17 +12,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.core.view.GravityCompat
+import java.text.ParsePosition
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class TaskActivity : BaseActivity() {
 
     private lateinit var recyclerCategory: RecyclerView
     private lateinit var recyclerTasks: RecyclerView
     private val allTasks = mutableListOf<Task>()
-    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var taskAdapter: DateSectionTaskAdapter
     private lateinit var categoryAdapter: CategoryAdapter
     private val db = FirebaseFirestore.getInstance()
     private lateinit var drawerLayout: DrawerLayout
     private val categoryList = listOf("ทั้งหมด", "งาน", "รายการโปรด", "วันเกิด")
+    private val dueDateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +46,7 @@ class TaskActivity : BaseActivity() {
 
         recyclerTasks.layoutManager = LinearLayoutManager(this)
 
-        taskAdapter = TaskAdapter(mutableListOf())
+        taskAdapter = DateSectionTaskAdapter()
         recyclerTasks.adapter = taskAdapter
 
         // ✅ ตั้งค่า CategoryAdapter แบบใหม่
@@ -146,7 +151,12 @@ class TaskActivity : BaseActivity() {
             }
         }
 
-        taskAdapter.updateList(filteredResult)
+        val groupedTasks = groupTasksByDate(filteredResult)
+        taskAdapter.updateSections(
+            overdueTasks = groupedTasks.overdue,
+            todayTasks = groupedTasks.today,
+            upcomingTasks = groupedTasks.upcoming
+        )
 
         // 2️⃣ ไฮไลต์หมวด
         categoryAdapter.setSelectedCategory(category)
@@ -159,5 +169,61 @@ class TaskActivity : BaseActivity() {
 
         // 4️⃣ เลื่อนรายการงานขึ้นบนสุด
         recyclerTasks.scrollToPosition(0)
+    }
+
+    private data class DateGroupedTasks(
+        val overdue: List<Task>,
+        val today: List<Task>,
+        val upcoming: List<Task>
+    )
+
+    private fun groupTasksByDate(tasks: List<Task>): DateGroupedTasks {
+        val overdue = mutableListOf<Task>()
+        val today = mutableListOf<Task>()
+        val upcoming = mutableListOf<Task>()
+        val todayStart = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        tasks.forEach { task ->
+            val dueDate = parseDueDate(task.dueDate)
+            when {
+                dueDate == null -> upcoming.add(task)
+                isSameDay(dueDate, todayStart) -> today.add(task)
+                dueDate.before(todayStart) -> overdue.add(task)
+                else -> upcoming.add(task)
+            }
+        }
+
+        return DateGroupedTasks(
+            overdue = overdue,
+            today = today,
+            upcoming = upcoming
+        )
+    }
+
+    private fun parseDueDate(rawDueDate: String?): Calendar? {
+        val value = rawDueDate?.trim().orEmpty()
+        if (value.isEmpty()) return null
+        dueDateFormatter.isLenient = false
+        val parsePosition = ParsePosition(0)
+        val parsedDate = dueDateFormatter.parse(value, parsePosition) ?: return null
+        if (parsePosition.index != value.length) return null
+
+        return Calendar.getInstance().apply {
+            time = parsedDate
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+    }
+
+    private fun isSameDay(first: Calendar, second: Calendar): Boolean {
+        return first.get(Calendar.YEAR) == second.get(Calendar.YEAR) &&
+            first.get(Calendar.DAY_OF_YEAR) == second.get(Calendar.DAY_OF_YEAR)
     }
 }
