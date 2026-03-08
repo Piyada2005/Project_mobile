@@ -364,8 +364,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_document"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/detvNoteLabel"
+                    app:layout_constraintBottom_toBottomOf="@id/detvNoteLabel"
                     app:layout_constraintVertical_bias="0.454"
                     tools:layout_editor_absoluteX="6dp" />
 
@@ -374,27 +374,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
+                    android:layout_marginTop="4dp"
                     android:text="หมายเหตุ"
                     android:textColor="#454545"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-                <!-- ขวา (กดได้) -->
+                <!-- ปุ่มเพิ่ม -->
                 <TextView
-                    android:id="@+id/detvNoteValue"
+                    android:id="@+id/detvNoteAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="4dp"
                     android:text="เพิ่ม"
                     android:textColor="#9A9A9A"
+                    android:padding="4dp"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <!-- ข้อความหมายเหตุ -->
+                <TextView
+                    android:id="@+id/detvNoteValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#444444"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintStart_toStartOf="@id/detvNoteLabel"
+                    app:layout_constraintTop_toBottomOf="@id/detvNoteLabel"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -410,8 +422,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_link"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/detvLinkLabel"
+                    app:layout_constraintBottom_toBottomOf="@id/detvLinkLabel"
                     app:layout_constraintVertical_bias="0.454"
                     tools:layout_editor_absoluteX="6dp" />
 
@@ -420,27 +432,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
-                    android:text="แนบลิงก์"
+                    android:layout_marginTop="4dp"
+                    android:text="สิ่งที่แนบมา"
                     android:textColor="#454545"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- ขวา (กดได้) -->
+                <!-- ปุ่มเพิ่ม -->
                 <TextView
-                    android:id="@+id/detvLinkValue"
+                    android:id="@+id/detvLinkAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="4dp"
                     android:text="เพิ่ม"
                     android:textColor="#9A9A9A"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <!-- ข้อความลิงก์ -->
+                <TextView
+                    android:id="@+id/detvLinkValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#444444"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@id/detvLinkLabel"
+                    app:layout_constraintTop_toBottomOf="@id/detvLinkLabel"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

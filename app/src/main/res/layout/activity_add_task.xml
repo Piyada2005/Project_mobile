@@ -356,6 +356,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -366,15 +367,55 @@
 
                 <!-- ขวา (กดได้) -->
 
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="2dp"
                     android:src="@drawable/ic_document"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/tvNoteLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvNoteLabel" />
+
+
+                <TextView
+                    android:id="@+id/tvNoteLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="4dp"
+                    android:text="หมายเหตุ"
+                    android:textColor="#454545"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/tvNoteAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="4dp"
+                    android:text="เพิ่ม"
+                    android:textColor="#9A9A9A"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvNoteValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#444444"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvNoteLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvNoteLabel" />
+
+                <!--
                 <TextView
                     android:id="@+id/tvNoteLabel"
                     android:layout_width="wrap_content"
@@ -401,6 +442,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+                -->
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -417,27 +460,28 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_link"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvLinkLabel"
+                    app:layout_constraintBottom_toBottomOf="@id/tvLinkLabel"
                     app:layout_constraintVertical_bias="0.444"
                     tools:layout_editor_absoluteX="2dp" />
 
                 <!-- ขวา (กดได้) -->
+
+                <!-- ปุ่มเพิ่ม -->
                 <TextView
                     android:id="@+id/tvLinkLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
+                    android:layout_marginTop="4dp"
                     android:text="แนบลิงก์"
                     android:textColor="#454545"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.444" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tvLinkValue"
+                    android:id="@+id/tvLinkAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -446,9 +490,22 @@
                     android:text="เพิ่ม"
                     android:textColor="#9A9A9A"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- ลิงก์จริง -->
+                <TextView
+                    android:id="@+id/tvLinkValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#444444"
+                    android:autoLink="none"
+                    android:linksClickable="false"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/tvLinkLabel"
+                    app:layout_constraintStart_toStartOf="@id/tvLinkLabel"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

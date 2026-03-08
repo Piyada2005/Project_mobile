@@ -30,12 +30,16 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvTime: TextView
     private lateinit var tvNotify: TextView
     private lateinit var tvRepeat: TextView
-    private lateinit var tvNote: TextView
+    private lateinit var tvNoteAdd: TextView
+    private lateinit var tvNoteValue: TextView
     private lateinit var tvCategory: TextView
-    private lateinit var tvLink: TextView
+    private lateinit var tvLinkAdd: TextView
+    private lateinit var tvLinkValue: TextView
     private var taskId: String? = null
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
+    private var isNotifyEnabled = false
+    private var isRepeatEnabled = false
     private lateinit var btnAddSubtask: TextView
     private lateinit var btnDeleteTask: MaterialButton
     private lateinit var btnCompleteTask: MaterialButton
@@ -63,9 +67,11 @@ class TaskDetailActivity : AppCompatActivity() {
         tvTime = findViewById(R.id.detxtTimeValue)
         tvNotify = findViewById(R.id.detxtNotifyValue)
         tvRepeat = findViewById(R.id.detxtRepeatValue)
-        tvNote = findViewById(R.id.detvNoteValue)
+        tvNoteAdd = findViewById(R.id.detvNoteAdd)
+        tvNoteValue = findViewById(R.id.detvNoteValue)
         tvCategory = findViewById(R.id.detvCategoryValue)
-        tvLink = findViewById(R.id.detvLinkValue)
+        tvLinkAdd = findViewById(R.id.detvLinkAdd)
+        tvLinkValue = findViewById(R.id.detvLinkValue)
 
         findViewById<ImageView>(R.id.debtnBack).setOnClickListener { finish() }
         btnAddSubtask = findViewById(R.id.deaddSubtask)
@@ -93,9 +99,11 @@ class TaskDetailActivity : AppCompatActivity() {
         tvTime.setOnClickListener { openTimePicker() }
         tvNotify.setOnClickListener { openReminderBottomSheet() }
         tvRepeat.setOnClickListener { openRepeatBottomSheet() }
-        tvNote.setOnClickListener { openNoteBottomSheet() }
+        tvNoteAdd.setOnClickListener { openNoteBottomSheet() }
+        tvNoteValue.setOnClickListener { openNoteBottomSheet() }
         tvCategory.setOnClickListener { openCategoryDialog() }
-        tvLink.setOnClickListener { showAttachmentBottomSheet() }
+        tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
+        tvLinkValue.setOnClickListener { showAttachmentBottomSheet() }
 
         btnAddSubtask.setOnClickListener {
             openAddSubtaskDialog()
@@ -116,10 +124,33 @@ class TaskDetailActivity : AppCompatActivity() {
                 tvDue.text = task.dueDate
                 tvTime.text = task.time
                 tvNotify.text = task.notify
-                tvRepeat.text = task.repeat
-                tvNote.text = task.note
+                isNotifyEnabled = task.notify != "ปิดการแจ้งเตือน"
+
+                val repeat = task.repeat ?: "ไม่ทำซ้ำ"
+
+                tvRepeat.text = repeat
+                isRepeatEnabled = repeat != "ไม่ทำซ้ำ"
+                val note = task.note ?: ""
+
+                if (note.isEmpty()) {
+                    tvNoteAdd.visibility = View.VISIBLE
+                    tvNoteValue.visibility = View.GONE
+                } else {
+                    tvNoteAdd.visibility = View.GONE
+                    tvNoteValue.visibility = View.VISIBLE
+                    tvNoteValue.text = note
+                }
                 tvCategory.text = task.category
-                tvLink.text = task.link
+                val link = task.link ?: ""
+
+                if (link.isEmpty()) {
+                    tvLinkAdd.visibility = View.VISIBLE
+                    tvLinkValue.visibility = View.GONE
+                } else {
+                    tvLinkAdd.visibility = View.GONE
+                    tvLinkValue.visibility = View.VISIBLE
+                    tvLinkValue.text = link
+                }
 
                 attachedLink = task.link ?: ""
                 attachedImageUri = task.imageUri ?: ""
@@ -184,7 +215,36 @@ class TaskDetailActivity : AppCompatActivity() {
         dialog.setContentView(view)
 
         val switchNotify = view.findViewById<Switch>(R.id.switchNotify)
+        switchNotify.isChecked = isNotifyEnabled
+
         val radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
+
+        val radios = listOf(
+            view.findViewById<RadioButton>(R.id.radio5),
+            view.findViewById<RadioButton>(R.id.radio15),
+            view.findViewById<RadioButton>(R.id.radio30),
+            view.findViewById<RadioButton>(R.id.radio1day),
+            view.findViewById<RadioButton>(R.id.radio2day),
+            view.findViewById<RadioButton>(R.id.radio3day)
+        )
+
+        fun updateRadioState(enabled: Boolean) {
+            radios.forEach {
+                it.isEnabled = enabled
+                it.alpha = if (enabled) 1f else 0.4f
+            }
+        }
+
+        updateRadioState(switchNotify.isChecked)
+
+        switchNotify.setOnCheckedChangeListener { _, isChecked ->
+            isNotifyEnabled = isChecked
+            updateRadioState(isChecked)
+
+            if (!isChecked) {
+                radioGroup.clearCheck()
+            }
+        }
 
         view.findViewById<ImageView>(R.id.btnClose).setOnClickListener {
             dialog.dismiss()
@@ -192,7 +252,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
         view.findViewById<ImageView>(R.id.btnDone).setOnClickListener {
 
-            if (!switchNotify.isChecked) {
+            if (!isNotifyEnabled) {
                 tvNotify.text = "ปิดการแจ้งเตือน"
                 updateTask("notify", "ปิดการแจ้งเตือน")
             } else {
@@ -219,8 +279,32 @@ class TaskDetailActivity : AppCompatActivity() {
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         val content = view.findViewById<FrameLayout>(R.id.contentContainer)
 
+        val switchRepeat = view.findViewById<Switch>(R.id.switchRepeat)
+        switchRepeat.isChecked = isRepeatEnabled
+
         val tabs = listOf("ชั่วโมง", "รายวัน", "รายสัปดาห์", "รายเดือน", "รายปี")
         tabs.forEach { tabLayout.addTab(tabLayout.newTab().setText(it)) }
+
+        fun updateRepeatState(enabled: Boolean) {
+
+            tabLayout.alpha = if (enabled) 1f else 0.4f
+            content.alpha = if (enabled) 1f else 0.4f
+
+            tabLayout.isEnabled = enabled
+            content.isEnabled = enabled
+        }
+
+        updateRepeatState(switchRepeat.isChecked)
+
+        switchRepeat.setOnCheckedChangeListener { _, isChecked ->
+            isRepeatEnabled = isChecked
+            updateRepeatState(isChecked)
+
+            if (!isChecked) {
+                tvRepeat.text = "ไม่ทำซ้ำ"
+                updateTask("repeat", "ไม่ทำซ้ำ")
+            }
+        }
 
         fun loadLayout(layoutId: Int) {
             content.removeAllViews()
@@ -245,9 +329,11 @@ class TaskDetailActivity : AppCompatActivity() {
         })
 
         view.findViewById<ImageView>(R.id.btnDone).setOnClickListener {
-            val value = tabLayout.getTabAt(tabLayout.selectedTabPosition)?.text.toString()
-            tvRepeat.text = value
-            updateTask("repeat", value)
+            if (isRepeatEnabled) {
+                val value = tabLayout.getTabAt(tabLayout.selectedTabPosition)?.text.toString()
+                tvRepeat.text = value
+                updateTask("repeat", value)
+            }
             dialog.dismiss()
         }
 
@@ -266,11 +352,19 @@ class TaskDetailActivity : AppCompatActivity() {
         dialog.setContentView(view)
 
         val etNote = view.findViewById<EditText>(R.id.etNote)
-        etNote.setText(tvNote.text)
+        etNote.setText(tvNoteValue.text)
 
         view.findViewById<ImageView>(R.id.btnSave).setOnClickListener {
             val text = etNote.text.toString()
-            tvNote.text = text
+            if (text.isEmpty()) {
+                tvNoteAdd.visibility = View.VISIBLE
+                tvNoteValue.visibility = View.GONE
+            } else {
+                tvNoteAdd.visibility = View.GONE
+                tvNoteValue.visibility = View.VISIBLE
+                tvNoteValue.text = text
+            }
+
             updateTask("note", text)
             dialog.dismiss()
         }
@@ -316,7 +410,14 @@ class TaskDetailActivity : AppCompatActivity() {
             .setPositiveButton("บันทึก") { _, _ ->
                 val link = edit.text.toString().trim()
                 attachedLink = link
-                tvLink.text = link
+                if (link.isEmpty()) {
+                    tvLinkAdd.visibility = View.VISIBLE
+                    tvLinkValue.visibility = View.GONE
+                } else {
+                    tvLinkAdd.visibility = View.GONE
+                    tvLinkValue.visibility = View.VISIBLE
+                    tvLinkValue.text = link
+                }
                 updateTask("link", link)
             }
             .setNegativeButton("ยกเลิก", null)
@@ -336,7 +437,9 @@ class TaskDetailActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 attachedImageUri = uri.toString()
-                tvLink.text = "เลือกรูปแล้ว"
+                tvLinkAdd.visibility = View.GONE
+                tvLinkValue.visibility = View.VISIBLE
+                tvLinkValue.text = "เลือกรูปแล้ว"
                 updateTask("imageUri", attachedImageUri)
             }
         }
