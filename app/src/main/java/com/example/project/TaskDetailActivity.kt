@@ -29,7 +29,6 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvDue: TextView
     private lateinit var tvTime: TextView
     private lateinit var tvNotify: TextView
-    private lateinit var tvRepeat: TextView
     private lateinit var tvNoteAdd: TextView
     private lateinit var tvNoteValue: TextView
     private lateinit var tvCategory: TextView
@@ -39,7 +38,6 @@ class TaskDetailActivity : AppCompatActivity() {
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
     private var isNotifyEnabled = false
-    private var isRepeatEnabled = false
     private lateinit var btnAddSubtask: TextView
     private lateinit var btnDeleteTask: MaterialButton
     private lateinit var btnCompleteTask: MaterialButton
@@ -66,10 +64,9 @@ class TaskDetailActivity : AppCompatActivity() {
         tvDue = findViewById(R.id.detxtDueValue)
         tvTime = findViewById(R.id.detxtTimeValue)
         tvNotify = findViewById(R.id.detxtNotifyValue)
-        tvRepeat = findViewById(R.id.detxtRepeatValue)
         tvNoteAdd = findViewById(R.id.detvNoteAdd)
         tvNoteValue = findViewById(R.id.detvNoteValue)
-        tvCategory = findViewById(R.id.detvCategoryValue)
+        tvCategory = findViewById(R.id.detxtCategoryValue)
         tvLinkAdd = findViewById(R.id.detvLinkAdd)
         tvLinkValue = findViewById(R.id.detvLinkValue)
 
@@ -98,7 +95,6 @@ class TaskDetailActivity : AppCompatActivity() {
         tvDue.setOnClickListener { openDatePicker() }
         tvTime.setOnClickListener { openTimePicker() }
         tvNotify.setOnClickListener { openReminderBottomSheet() }
-        tvRepeat.setOnClickListener { openRepeatBottomSheet() }
         tvNoteAdd.setOnClickListener { openNoteBottomSheet() }
         tvNoteValue.setOnClickListener { openNoteBottomSheet() }
         tvCategory.setOnClickListener { openCategoryDialog() }
@@ -126,10 +122,6 @@ class TaskDetailActivity : AppCompatActivity() {
                 tvNotify.text = task.notify
                 isNotifyEnabled = task.notify != "ปิดการแจ้งเตือน"
 
-                val repeat = task.repeat ?: "ไม่ทำซ้ำ"
-
-                tvRepeat.text = repeat
-                isRepeatEnabled = repeat != "ไม่ทำซ้ำ"
                 val note = task.note ?: ""
 
                 if (note.isEmpty()) {
@@ -263,81 +255,6 @@ class TaskDetailActivity : AppCompatActivity() {
                     updateTask("notify", selected.text.toString())
                 }
             }
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    // ================= REPEAT =================
-    private fun openRepeatBottomSheet() {
-
-        val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.bottomsheet_repeat, null)
-        dialog.setContentView(view)
-
-        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
-        val content = view.findViewById<FrameLayout>(R.id.contentContainer)
-
-        val switchRepeat = view.findViewById<Switch>(R.id.switchRepeat)
-        switchRepeat.isChecked = isRepeatEnabled
-
-        val tabs = listOf("ชั่วโมง", "รายวัน", "รายสัปดาห์", "รายเดือน", "รายปี")
-        tabs.forEach { tabLayout.addTab(tabLayout.newTab().setText(it)) }
-
-        fun updateRepeatState(enabled: Boolean) {
-
-            tabLayout.alpha = if (enabled) 1f else 0.4f
-            content.alpha = if (enabled) 1f else 0.4f
-
-            tabLayout.isEnabled = enabled
-            content.isEnabled = enabled
-        }
-
-        updateRepeatState(switchRepeat.isChecked)
-
-        switchRepeat.setOnCheckedChangeListener { _, isChecked ->
-            isRepeatEnabled = isChecked
-            updateRepeatState(isChecked)
-
-            if (!isChecked) {
-                tvRepeat.text = "ไม่ทำซ้ำ"
-                updateTask("repeat", "ไม่ทำซ้ำ")
-            }
-        }
-
-        fun loadLayout(layoutId: Int) {
-            content.removeAllViews()
-            val child = layoutInflater.inflate(layoutId, content, false)
-            content.addView(child)
-        }
-
-        loadLayout(R.layout.repeat_hourly)
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> loadLayout(R.layout.repeat_hourly)
-                    1 -> loadLayout(R.layout.repeat_daily)
-                    2 -> loadLayout(R.layout.repeat_weekly)
-                    3 -> loadLayout(R.layout.repeat_monthly)
-                    4 -> loadLayout(R.layout.repeat_yearly)
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-
-        view.findViewById<ImageView>(R.id.btnDone).setOnClickListener {
-            if (isRepeatEnabled) {
-                val value = tabLayout.getTabAt(tabLayout.selectedTabPosition)?.text.toString()
-                tvRepeat.text = value
-                updateTask("repeat", value)
-            }
-            dialog.dismiss()
-        }
-
-        view.findViewById<ImageView>(R.id.btnClose).setOnClickListener {
             dialog.dismiss()
         }
 

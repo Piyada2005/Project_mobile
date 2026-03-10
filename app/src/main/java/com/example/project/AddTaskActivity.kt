@@ -47,7 +47,6 @@ class AddTaskActivity : AppCompatActivity() {
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
     private var isNotifyEnabled = false
-    private var isRepeatEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +68,6 @@ class AddTaskActivity : AppCompatActivity() {
         val txtDueValue = findViewById<TextView>(R.id.txtDueValue)
         val txtTimeValue = findViewById<TextView>(R.id.txtTimeValue)
         val txtNotifyValue = findViewById<TextView>(R.id.txtNotifyValue)
-        val txtRepeatValue = findViewById<TextView>(R.id.txtRepeatValue)
         val tvNoteAdd = findViewById<TextView>(R.id.tvNoteAdd)
         val tvNoteValue = findViewById<TextView>(R.id.tvNoteValue)
 
@@ -228,84 +226,6 @@ class AddTaskActivity : AppCompatActivity() {
             dialog.show()
         }
 
-        txtRepeatValue.setOnClickListener {
-
-            val dialog = BottomSheetDialog(this)
-            val view = layoutInflater.inflate(R.layout.bottomsheet_repeat, null)
-            dialog.setContentView(view)
-
-            val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
-            val content = view.findViewById<FrameLayout>(R.id.contentContainer)
-            val switchRepeat = view.findViewById<Switch>(R.id.switchRepeat)
-            switchRepeat.isChecked = isRepeatEnabled
-
-            val repeatEnabled = switchRepeat.isChecked
-
-            tabLayout.alpha = if (repeatEnabled) 1f else 0.4f
-            content.alpha = if (repeatEnabled) 1f else 0.4f
-
-            tabLayout.isEnabled = repeatEnabled
-            content.isEnabled = repeatEnabled
-
-            val tabs = listOf("ชั่วโมง", "รายวัน", "รายสัปดาห์", "รายเดือน", "รายปี")
-
-            tabs.forEach { tabLayout.addTab(tabLayout.newTab().setText(it)) }
-
-            switchRepeat.setOnCheckedChangeListener { _, isChecked ->
-
-                isRepeatEnabled = isChecked
-
-                tabLayout.alpha = if (isChecked) 1f else 0.4f
-                content.alpha = if (isChecked) 1f else 0.4f
-
-                tabLayout.isEnabled = isChecked
-                content.isEnabled = isChecked
-
-                if (!isChecked) {
-                    txtRepeatValue.text = "ไม่ทำซ้ำ"
-                }
-            }
-
-            fun loadLayout(layoutId: Int) {content.removeAllViews()
-                val child = layoutInflater.inflate(layoutId, content, false)
-                content.addView(child)
-            }
-
-            loadLayout(R.layout.repeat_hourly)
-
-            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab) {
-                    when (tab.position) {
-                        0 -> loadLayout(R.layout.repeat_hourly)
-                        1 -> loadLayout(R.layout.repeat_daily)
-                        2 -> loadLayout(R.layout.repeat_weekly)
-                        3 -> loadLayout(R.layout.repeat_monthly)
-                        4 -> loadLayout(R.layout.repeat_yearly)
-                    }
-                }
-                override fun onTabUnselected(tab: TabLayout.Tab) {}
-                override fun onTabReselected(tab: TabLayout.Tab) {}
-            })
-
-            view.findViewById<ImageView>(R.id.btnClose).setOnClickListener {
-                dialog.dismiss()
-            }
-
-            view.findViewById<ImageView>(R.id.btnDone).setOnClickListener {
-
-                if (!switchRepeat.isChecked) {
-                    txtRepeatValue.text = "ไม่ทำซ้ำ"
-                } else {
-                    txtRepeatValue.text =
-                        tabLayout.getTabAt(tabLayout.selectedTabPosition)?.text
-                }
-
-                dialog.dismiss()
-            }
-
-            dialog.show()
-        }
-
         tvNoteAdd.setOnClickListener {
 
             val dialog = BottomSheetDialog(this)
@@ -392,7 +312,6 @@ class AddTaskActivity : AppCompatActivity() {
                 "dueDate" to txtDueValue.text.toString(),
                 "time" to txtTimeValue.text.toString(),
                 "notify" to txtNotifyValue.text.toString(),
-                "repeat" to txtRepeatValue.text.toString(),
                 "note" to if (tvNoteValue.visibility == View.VISIBLE)
                     tvNoteValue.text.toString()
                 else
@@ -416,7 +335,7 @@ class AddTaskActivity : AppCompatActivity() {
                 }
         }
 
-        val tvCategoryValue = findViewById<TextView>(R.id.tvCategoryValue)
+        val tvCategoryValue = findViewById<TextView>(R.id.txtCategoryValue)
 
         tvCategoryValue.setOnClickListener {
 
