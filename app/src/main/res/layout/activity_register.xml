@@ -117,7 +117,7 @@
         android:layout_height="51dp"
         android:background="@drawable/edittext_bg"
         android:ems="10"
-        android:hint="หมายเลขโทรศัพท์มือถือหรืออีเมล"
+        android:hint="อีเมล"
         android:inputType="text"
         android:paddingStart="16dp"
         android:textSize="14sp"
