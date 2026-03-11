@@ -57,24 +57,25 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="80dp"
+                    android:background="#FFFFFF"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
 
                     <!-- ชื่อ -->
                     <TextView
                         android:id="@+id/etName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="ชื่อ"
+                        android:text="ชื่อ"
                         android:textSize="16sp"
+                        android:textStyle="bold"
                         android:textColor="#454545"
-                        android:background="@null"
                         android:layout_marginStart="20dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/btnEditName"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent"/>
 
-                    <!-- ไอคอนดินสอ -->
                     <ImageView
                         android:id="@+id/btnEditName"
                         android:layout_width="20dp"
@@ -82,12 +83,36 @@
                         android:src="@drawable/pencil"
                         android:layout_marginEnd="15dp"
                         android:clickable="true"
-                        android:focusable="true"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/etName"
-                        app:layout_constraintBottom_toBottomOf="@id/etName"/>
+                        app:layout_constraintTop_toTopOf="@id/etName"/>
+
+                    <!-- อีเมล -->
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="example@email.com"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btnEditEmail"
+                        app:layout_constraintTop_toBottomOf="@id/etName"/>
+
+                    <ImageView
+                        android:id="@+id/btnEditEmail"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/pencil"
+                        android:layout_marginEnd="15dp"
+                        android:clickable="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tvEmail"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
             </androidx.cardview.widget.CardView>
             <!--

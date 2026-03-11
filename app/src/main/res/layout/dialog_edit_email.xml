@@ -12,33 +12,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="แก้ไขชื่อผู้ใช้"
+            android:text="แก้ไขอีเมล"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
         <EditText
-            android:id="@+id/etEditName"
+            android:id="@+id/etEditEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="กรอกชื่อใหม่"
+            android:hint="กรอกอีเมลใหม่"
+            android:inputType="textEmailAddress"
             android:background="@android:drawable/edit_text"
-            android:textSize="18sp"/>
+            android:padding="10dp"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveName"
+            android:id="@+id/btnSaveEmail"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            app:backgroundTint="#94b9ff"
+            android:layout_height="wrap_content"
             android:text="บันทึก"
-            app:cornerRadius="20dp"/>
+            android:layout_marginTop="20dp"
+            app:cornerRadius="12dp"/>
 
     </LinearLayout>
 

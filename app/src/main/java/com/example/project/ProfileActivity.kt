@@ -29,6 +29,8 @@ class ProfileActivity : BaseActivity() {
     private lateinit var imgProfile: ImageView
     private lateinit var etName: TextView
     private lateinit var btnEditName: ImageView
+    private lateinit var tvEmail: TextView
+    private lateinit var btnEditEmail: ImageView
     private lateinit var tvCompletedCount: TextView
     private lateinit var tvPendingCount: TextView
     private lateinit var pieChart: PieChart
@@ -71,6 +73,8 @@ class ProfileActivity : BaseActivity() {
         imgProfile = findViewById(R.id.imgProfile)
         etName = findViewById(R.id.etName)
         btnEditName = findViewById(R.id.btnEditName)
+        tvEmail = findViewById(R.id.tvEmail)
+        btnEditEmail = findViewById(R.id.btnEditEmail)
         tvCompletedCount = findViewById(R.id.tvCompletedCount)
         tvPendingCount = findViewById(R.id.tvPendingCount)
         pieChart = findViewById(R.id.pieChart)
@@ -85,6 +89,7 @@ class ProfileActivity : BaseActivity() {
         db.collection("users").document(userId).get()
             .addOnSuccessListener { doc ->
                 etName.setText(doc.getString("username") ?: doc.getString("name") ?: "")
+                tvEmail.text = FirebaseAuth.getInstance().currentUser?.email ?: ""
 
                 val savedImage = doc.getString("imageUri")
                 if (!savedImage.isNullOrEmpty()) {
@@ -102,11 +107,45 @@ class ProfileActivity : BaseActivity() {
         // ===== กดชื่อ =====
         btnEditName.setOnClickListener { showNameDialog() }
         etName.setOnClickListener { showNameDialog() }
+
+        btnEditEmail.setOnClickListener { showEmailDialog() }
+        tvEmail.setOnClickListener { showEmailDialog() }
     }
 
     override fun onResume() {
         super.onResume()
         FirebaseAuth.getInstance().currentUser?.uid?.let { loadTaskStats(it) }
+    }
+
+    private fun showEmailDialog() {
+
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_edit_email)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val edit = dialog.findViewById<EditText>(R.id.etEditEmail)
+        val btnSave = dialog.findViewById<MaterialButton>(R.id.btnSaveEmail)
+
+        edit.setText(tvEmail.text.toString())
+
+        btnSave.setOnClickListener {
+
+            val newEmail = edit.text.toString()
+            val user = FirebaseAuth.getInstance().currentUser
+
+            user?.verifyBeforeUpdateEmail(newEmail)
+                ?.addOnSuccessListener {
+                    tvEmail.text = newEmail
+                    dialog.dismiss()
+                }
+        }
+
+        dialog.show()
+
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     // ===== Image Picker =====
