@@ -27,7 +27,8 @@ import com.google.android.material.card.MaterialCardView
 class ProfileActivity : BaseActivity() {
 
     private lateinit var imgProfile: ImageView
-    private lateinit var etName: EditText
+    private lateinit var etName: TextView
+    private lateinit var btnEditName: ImageView
     private lateinit var tvCompletedCount: TextView
     private lateinit var tvPendingCount: TextView
     private lateinit var pieChart: PieChart
@@ -69,6 +70,7 @@ class ProfileActivity : BaseActivity() {
         // ===== Profile Views =====
         imgProfile = findViewById(R.id.imgProfile)
         etName = findViewById(R.id.etName)
+        btnEditName = findViewById(R.id.btnEditName)
         tvCompletedCount = findViewById(R.id.tvCompletedCount)
         tvPendingCount = findViewById(R.id.tvPendingCount)
         pieChart = findViewById(R.id.pieChart)
@@ -98,9 +100,8 @@ class ProfileActivity : BaseActivity() {
         }
 
         // ===== กดชื่อ =====
-        etName.setOnClickListener {
-            showNameDialog()
-        }
+        btnEditName.setOnClickListener { showNameDialog() }
+        etName.setOnClickListener { showNameDialog() }
     }
 
     override fun onResume() {
@@ -158,7 +159,7 @@ class ProfileActivity : BaseActivity() {
         val edit = dialog.findViewById<EditText>(R.id.etEditName)
         val btnSave = dialog.findViewById<MaterialButton>(R.id.btnSaveName)
 
-        edit.setText(etName.text)
+        edit.setText(etName.text.toString())
 
         btnSave.setOnClickListener {
             etName.setText(edit.text.toString())

@@ -6,6 +6,7 @@
         <item name="fontFamily">@font/itim</item>
         <item name="android:fontFamily">@font/itim</item>
 
+        <item name="elevationOverlayEnabled">false</item>
         <!-- สี dialog / picker -->
         <item name="colorSurface">#FFFFFF</item>
 
