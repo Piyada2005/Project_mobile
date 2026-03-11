@@ -5,6 +5,15 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="fontFamily">@font/itim</item>
         <item name="android:fontFamily">@font/itim</item>
+
+        <!-- สี dialog / picker -->
+        <item name="colorSurface">#FFFFFF</item>
+
+        <!-- สีปุ่ม -->
+        <item name="colorPrimary">#94B9FF</item>
+        <item name="colorSecondary">#94B9FF</item>
+        <item name="colorPrimaryContainer">#D6E6FF</item>
+
     </style>
 
     <style name="Theme.Project" parent="Base.Theme.Project" />

@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         // ถ้ามีการ login อยู่แล้ว ให้เข้าแอปเลย
         if (mAuth!!.currentUser != null) {
-            startActivity(Intent(this@LoginActivity, ProfileActivity::class.java))
+            startActivity(Intent(this@LoginActivity, TaskActivity::class.java))
             finish()
         }
 
@@ -101,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
 
                         Log.d(TAG, "Login Success")
 
-                        startActivity(Intent(this@LoginActivity, ProfileActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, TaskActivity::class.java))
                         finish()
                     }
                 }
