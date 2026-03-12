@@ -77,6 +77,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.844" />
 
+    <TextView
+        android:id="@+id/txtForgotPassword"
+        android:layout_width="95dp"
+        android:layout_height="37dp"
+        android:gravity="center"
+        android:text="ลืมรหัสผ่าน"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.784"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.678" />
+
     <ImageView
         android:id="@+id/img_back"
         android:layout_width="30dp"
