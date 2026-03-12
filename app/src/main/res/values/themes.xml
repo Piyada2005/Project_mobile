@@ -3,8 +3,8 @@
     <style name="Base.Theme.Project" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="fontFamily">@font/itim</item>
-        <item name="android:fontFamily">@font/itim</item>
+        <item name="fontFamily">@font/sarabun</item>
+        <item name="android:fontFamily">@font/sarabun</item>
 
         <item name="elevationOverlayEnabled">false</item>
         <!-- สี dialog / picker -->
@@ -26,6 +26,11 @@
     <style name="RoundedShape">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">28dp</item>
+    </style>
+
+    <style name="RoundedCornerImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
     </style>
 
 </resources>

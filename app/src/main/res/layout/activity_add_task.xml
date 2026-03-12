@@ -350,22 +350,22 @@
                     android:focusable="true"
                     android:padding="4dp"
                     android:text="เพิ่ม"
-                    android:textColor="#9A9A9A"
+                    android:textColor="#6DB1FF"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvNoteLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
                     android:id="@+id/tvNoteValue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
                     android:textColor="#444444"
                     android:textSize="15sp"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:gravity="end"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvNoteLabel"
                     app:layout_constraintStart_toStartOf="@id/tvNoteLabel"
-                    app:layout_constraintTop_toBottomOf="@id/tvNoteLabel" />
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <!--
                 <TextView
@@ -440,10 +440,10 @@
                     android:focusable="true"
                     android:padding="4dp"
                     android:text="เพิ่ม"
-                    android:textColor="#9A9A9A"
+                    android:textColor="#6DB1FF"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvLinkLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <!-- ลิงก์จริง -->
                 <TextView
@@ -455,7 +455,8 @@
                     android:linksClickable="false"
                     android:textSize="15sp"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/tvLinkLabel"
+                    android:gravity="end"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvLinkLabel"
                     app:layout_constraintStart_toStartOf="@id/tvLinkLabel"
                     app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>

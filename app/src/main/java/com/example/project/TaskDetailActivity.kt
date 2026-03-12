@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.util.Log
+import android.net.Uri
+import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -34,6 +37,7 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvCategory: TextView
     private lateinit var tvLinkAdd: TextView
     private lateinit var tvLinkValue: TextView
+    private lateinit var ivAttachmentThumbnail: com.google.android.material.imageview.ShapeableImageView
     private var taskId: String? = null
     private var attachedLink: String = ""
     private var attachedImageUri: String = ""
@@ -69,6 +73,7 @@ class TaskDetailActivity : AppCompatActivity() {
         tvCategory = findViewById(R.id.detxtCategoryValue)
         tvLinkAdd = findViewById(R.id.detvLinkAdd)
         tvLinkValue = findViewById(R.id.detvLinkValue)
+        ivAttachmentThumbnail = findViewById(R.id.detvImageThumbnail)
 
         findViewById<ImageView>(R.id.debtnBack).setOnClickListener { finish() }
         btnAddSubtask = findViewById(R.id.deaddSubtask)
@@ -98,8 +103,13 @@ class TaskDetailActivity : AppCompatActivity() {
         tvNoteAdd.setOnClickListener { openNoteBottomSheet() }
         tvNoteValue.setOnClickListener { openNoteBottomSheet() }
         tvCategory.setOnClickListener { openCategoryDialog() }
-        tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
-        tvLinkValue.setOnClickListener { showAttachmentBottomSheet() }
+
+        // findViewById<ViewGroup>(R.id.attachmentSection).setOnClickListener { 
+        //    showAttachmentBottomSheet() 
+        // }
+        
+        // tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
+        // tvLinkValue.setOnClickListener { showAttachmentBottomSheet() }
 
         btnAddSubtask.setOnClickListener {
             openAddSubtaskDialog()
@@ -123,29 +133,16 @@ class TaskDetailActivity : AppCompatActivity() {
                 isNotifyEnabled = task.notify != "ปิดการแจ้งเตือน"
 
                 val note = task.note ?: ""
+                
+                // ใช้ฟังก์ชันกลางเพื่อแสดงผลเหมือน Attachment
+                updateNoteSectionVisibility(note)
 
-                if (note.isEmpty()) {
-                    tvNoteAdd.visibility = View.VISIBLE
-                    tvNoteValue.visibility = View.GONE
-                } else {
-                    tvNoteAdd.visibility = View.GONE
-                    tvNoteValue.visibility = View.VISIBLE
-                    tvNoteValue.text = note
-                }
                 tvCategory.text = task.category
-                val link = task.link ?: ""
-
-                if (link.isEmpty()) {
-                    tvLinkAdd.visibility = View.VISIBLE
-                    tvLinkValue.visibility = View.GONE
-                } else {
-                    tvLinkAdd.visibility = View.GONE
-                    tvLinkValue.visibility = View.VISIBLE
-                    tvLinkValue.text = link
-                }
 
                 attachedLink = task.link ?: ""
                 attachedImageUri = task.imageUri ?: ""
+                Log.d("TaskDetail", "loadTask: fetched imageUri = '$attachedImageUri'")
+                updateAttachmentSectionVisibility()
 
                 // ✅ โหลด subtasks ตรงนี้เท่านั้น
                 val subtasks = doc.get("subtasks") as? List<String>
@@ -273,14 +270,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
         view.findViewById<ImageView>(R.id.btnSave).setOnClickListener {
             val text = etNote.text.toString()
-            if (text.isEmpty()) {
-                tvNoteAdd.visibility = View.VISIBLE
-                tvNoteValue.visibility = View.GONE
-            } else {
-                tvNoteAdd.visibility = View.GONE
-                tvNoteValue.visibility = View.VISIBLE
-                tvNoteValue.text = text
-            }
+            updateNoteSectionVisibility(text)
 
             updateTask("note", text)
             dialog.dismiss()
@@ -291,6 +281,17 @@ class TaskDetailActivity : AppCompatActivity() {
         }
 
         dialog.show()
+    }
+
+    private fun updateNoteSectionVisibility(note: String) {
+        if (note.isNotEmpty()) {
+            tvNoteAdd.visibility = View.GONE
+            tvNoteValue.visibility = View.VISIBLE
+            tvNoteValue.text = note
+        } else {
+            tvNoteAdd.visibility = View.VISIBLE
+            tvNoteValue.visibility = View.GONE
+        }
     }
 
     // ================= ATTACHMENT =================
@@ -327,15 +328,8 @@ class TaskDetailActivity : AppCompatActivity() {
             .setPositiveButton("บันทึก") { _, _ ->
                 val link = edit.text.toString().trim()
                 attachedLink = link
-                if (link.isEmpty()) {
-                    tvLinkAdd.visibility = View.VISIBLE
-                    tvLinkValue.visibility = View.GONE
-                } else {
-                    tvLinkAdd.visibility = View.GONE
-                    tvLinkValue.visibility = View.VISIBLE
-                    tvLinkValue.text = link
-                }
                 updateTask("link", link)
+                updateAttachmentSectionVisibility()
             }
             .setNegativeButton("ยกเลิก", null)
             .create()
@@ -353,13 +347,124 @@ class TaskDetailActivity : AppCompatActivity() {
     private val imagePicker =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                attachedImageUri = uri.toString()
-                tvLinkAdd.visibility = View.GONE
-                tvLinkValue.visibility = View.VISIBLE
-                tvLinkValue.text = "เลือกรูปแล้ว"
-                updateTask("imageUri", attachedImageUri)
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                    attachedImageUri = uri.toString()
+                    updateTask("imageUri", attachedImageUri)
+                    updateAttachmentSectionVisibility()
+                } catch (e: Exception) {
+                    Log.e("TaskDetail", "Failed to take persistable permission: ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
+
+    private fun updateAttachmentSectionVisibility() {
+        val hasLink = attachedLink.isNotEmpty()
+        val hasImage = attachedImageUri.isNotEmpty()
+        
+        Log.d("TaskDetail", "updateAttachment: hasLink=$hasLink, hasImage=$hasImage, uri='$attachedImageUri'")
+        
+        val attachmentSection = findViewById<ViewGroup>(R.id.attachmentSection)
+
+        if (hasLink || hasImage) {
+            
+            // ถ้ามีลิงก์ ห้ามกดที่แถว (กดได้แค่ตัวลิงก์)
+            // ถ้ามีแค่รูป ให้กดที่แถวเพื่อแก้ไขได้
+            if (hasLink) {
+                attachmentSection.setOnClickListener(null)
+                attachmentSection.isClickable = false
+                attachmentSection.isFocusable = false
+            } else {
+                attachmentSection.setOnClickListener { showAttachmentBottomSheet() }
+                attachmentSection.isClickable = true
+                attachmentSection.isFocusable = true
+            }
+
+            when {
+                hasLink && hasImage -> {
+                    // ทั้งคู่: แสดงลิงก์ขวา, รูปเล็กขวาสุด
+                    tvLinkAdd.visibility = View.GONE
+                    tvLinkValue.visibility = View.VISIBLE
+                    tvLinkValue.text = attachedLink
+                    
+                    ivAttachmentThumbnail.visibility = View.VISIBLE
+                    try {
+                        ivAttachmentThumbnail.setImageURI(Uri.parse(attachedImageUri))
+                        ivAttachmentThumbnail.setOnClickListener { showFullImageDialog(attachedImageUri) }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    
+                    // ปรับ constraint ของ Link Value ให้ไม่ทับรูป
+                    val params = tvLinkValue.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+                    params.endToStart = R.id.detvImageThumbnail
+                    params.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                    params.marginEnd = 8
+                    tvLinkValue.layoutParams = params
+                }
+                hasLink -> {
+                    // แค่ลิงก์: แสดงลิงก์ขวา, ซ่อนรูป
+                    tvLinkAdd.visibility = View.GONE
+                    tvLinkValue.visibility = View.VISIBLE
+                    tvLinkValue.text = attachedLink
+                    
+                    ivAttachmentThumbnail.visibility = View.GONE
+                    
+                    // Reset constraint
+                    val params = tvLinkValue.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+                    params.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    params.endToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                    tvLinkValue.layoutParams = params
+                }
+                hasImage -> {
+                    // แค่รูป: ลบคำว่า "ไม่มี", แสดงรูปเล็กขวาสุด
+                    tvLinkAdd.visibility = View.GONE
+                    tvLinkValue.visibility = View.GONE
+                    
+                    ivAttachmentThumbnail.visibility = View.VISIBLE
+                    try {
+                        ivAttachmentThumbnail.setImageURI(Uri.parse(attachedImageUri))
+                        ivAttachmentThumbnail.setOnClickListener { showFullImageDialog(attachedImageUri) }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        } else {
+            // ไม่มีข้อมูล: ห้ามกด!
+            attachmentSection.setOnClickListener(null)
+            attachmentSection.isClickable = false
+            attachmentSection.isFocusable = false
+
+            // แสดง "ไม่มี", ซ่อนค่า, ซ่อนรูป
+            tvLinkAdd.visibility = View.VISIBLE
+            tvLinkAdd.text = "ไม่มี"
+            tvLinkValue.visibility = View.GONE
+            ivAttachmentThumbnail.visibility = View.GONE
+        }
+    }
+
+    private fun showFullImageDialog(uriString: String) {
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_full_image)
+        
+        val fullImageView = dialog.findViewById<ImageView>(R.id.fullImageView)
+        val btnClose = dialog.findViewById<ImageView>(R.id.btnCloseImage)
+        
+        try {
+            fullImageView.setImageURI(Uri.parse(uriString))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        
+        btnClose.setOnClickListener { dialog.dismiss() }
+        
+        dialog.show()
+    }
 
     // ================= CATEGORY =================
     private fun openCategoryDialog() {
