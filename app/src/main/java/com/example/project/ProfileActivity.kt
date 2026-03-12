@@ -93,11 +93,27 @@ class ProfileActivity : BaseActivity() {
 
                 val savedImage = doc.getString("imageUri")
                 if (!savedImage.isNullOrEmpty()) {
-                    imgProfile.setImageURI(Uri.parse(savedImage))
-                    imageUri = savedImage
+                    try {
+                        imgProfile.setImageURI(Uri.parse(savedImage))
+                        imageUri = savedImage
+                    } catch (e: Exception) {
+                        imgProfile.setImageResource(R.drawable.profile)
+                    }
                 }
             }
         loadTaskStats(userId)
+
+        val pref = getSharedPreferences("profile", MODE_PRIVATE)
+        val savedImage = pref.getString("imageUri", null)
+
+        if (!savedImage.isNullOrEmpty()) {
+            try {
+                imgProfile.setImageURI(Uri.parse(savedImage))
+                imageUri = savedImage
+            } catch (e: Exception) {
+                imgProfile.setImageResource(R.drawable.profile)
+            }
+        }
 
         // ===== กดรูป =====
         imgProfile.setOnClickListener {
@@ -110,6 +126,8 @@ class ProfileActivity : BaseActivity() {
 
         btnEditEmail.setOnClickListener { showEmailDialog() }
         tvEmail.setOnClickListener { showEmailDialog() }
+
+
     }
 
     override fun onResume() {
@@ -152,8 +170,16 @@ class ProfileActivity : BaseActivity() {
     private val imagePicker =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
                 imgProfile.setImageURI(uri)
                 imageUri = uri.toString()
+
+                val pref = getSharedPreferences("profile", MODE_PRIVATE)
+                pref.edit().putString("imageUri", imageUri).apply()
+
                 saveProfile()
             }
         }

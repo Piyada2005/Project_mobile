@@ -25,21 +25,21 @@
             android:padding="24dp">
 
             <!-- รูปโปรไฟล์ -->
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgProfile"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_circle"
                 android:padding="20dp"
-                android:src="@drawable/profile" />
+                android:src="@drawable/p1"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/circleImage"/>
 
             <!-- ชื่อ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="12dp"
                 android:text="โปรไฟล์"
                 android:textColor="#7A7A7A"
                 android:textSize="22sp"
@@ -57,28 +57,40 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="#FFFFFF"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
-                    <!-- ชื่อ -->
+                    <!-- หัวข้อชื่อ -->
+                    <TextView
+                        android:id="@+id/tvLabelName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ชื่อ"
+                        android:textColor="#888888"
+                        android:textSize="12sp"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <!-- ชื่อผู้ใช้ -->
                     <TextView
                         android:id="@+id/etName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="ชื่อ"
+                        android:text="piyada"
+                        android:textColor="#454545"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#454545"
                         android:layout_marginStart="20dp"
+                        android:layout_marginTop="4dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/btnEditName"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/tvLabelName"/>
 
                     <ImageView
                         android:id="@+id/btnEditName"
-                        android:layout_width="20dp"
+                        android:layout_width="17dp"
                         android:layout_height="20dp"
                         android:src="@drawable/pencil"
                         android:layout_marginEnd="15dp"
@@ -86,23 +98,37 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/etName"/>
 
+
+                    <!-- หัวข้ออีเมล -->
+                    <TextView
+                        android:id="@+id/tvLabelEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="อีเมล"
+                        android:textColor="#888888"
+                        android:textSize="12sp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/etName"/>
+
                     <!-- อีเมล -->
                     <TextView
                         android:id="@+id/tvEmail"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="example@email.com"
+                        android:textColor="#666666"
                         android:textSize="14sp"
-                        android:textColor="#888888"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/btnEditEmail"
-                        app:layout_constraintTop_toBottomOf="@id/etName"/>
+                        app:layout_constraintTop_toBottomOf="@id/tvLabelEmail"/>
 
                     <ImageView
                         android:id="@+id/btnEditEmail"
-                        android:layout_width="20dp"
+                        android:layout_width="17dp"
                         android:layout_height="20dp"
                         android:src="@drawable/pencil"
                         android:layout_marginEnd="15dp"
@@ -111,8 +137,6 @@
                         app:layout_constraintTop_toTopOf="@id/tvEmail"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
             </androidx.cardview.widget.CardView>
             <!--
@@ -155,7 +179,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
                 android:layout_marginStart="10dp"
