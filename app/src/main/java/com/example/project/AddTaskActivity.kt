@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.content.res.Resources
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -44,8 +45,8 @@ class AddTaskActivity : AppCompatActivity() {
     private val subtaskList = mutableListOf<String>()
     private lateinit var adapter: SubtaskAdapter
     private var selectedCategory = "ไม่มีหมวดหมู่"
-    private var attachedLink: String = ""
-    private var attachedImageUri: String = ""
+    private val attachments = mutableListOf<Attachment>()
+    private lateinit var attachmentAdapter: AttachmentAdapter
     private var isNotifyEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +56,8 @@ class AddTaskActivity : AppCompatActivity() {
 
 
         val tvLinkAdd = findViewById<TextView>(R.id.tvLinkAdd)
-        val tvLinkValue = findViewById<TextView>(R.id.tvLinkValue)
 
         tvLinkAdd.setOnClickListener {
-            showAttachmentBottomSheet()
-        }
-
-        tvLinkValue.setOnClickListener {
             showAttachmentBottomSheet()
         }
 
@@ -316,8 +312,7 @@ class AddTaskActivity : AppCompatActivity() {
                     tvNoteValue.text.toString()
                 else
                     "",
-                "link" to attachedLink,
-                "imageUri" to attachedImageUri,
+                "attachments" to attachments,
                 "subtasks" to subtaskList,
                 "userId" to userId,
                 "isFinished" to false,
@@ -364,16 +359,58 @@ class AddTaskActivity : AppCompatActivity() {
             )
         }
 
+        val recyclerAttachments = findViewById<RecyclerView>(R.id.recyclerAttachments)
+
+        attachmentAdapter = AttachmentAdapter(
+            attachments,
+            { position ->
+                attachments.removeAt(position)
+                attachmentAdapter.notifyDataSetChanged()
+            },
+            { }   // ยังไม่ต้องทำอะไรตอนกดรูป
+        )
+
+        recyclerAttachments.adapter = attachmentAdapter
+        recyclerAttachments.layoutManager = LinearLayoutManager(this)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
     private val imagePicker =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri != null) {
-                attachedImageUri = uri.toString()
-                findViewById<TextView>(R.id.tvLinkAdd).visibility = View.GONE
-                findViewById<TextView>(R.id.tvLinkValue).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvLinkValue).text = "เลือกรูปแล้ว"
+
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                attachments.add(
+                    Attachment("image", uri.toString())
+                )
+
+                val recyclerAttachments =
+                    findViewById<RecyclerView>(R.id.recyclerAttachments)
+
+                recyclerAttachments.visibility = View.VISIBLE
+
+                attachmentAdapter.notifyDataSetChanged()
             }
         }
 
@@ -400,7 +437,7 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun openGallery() {
-        imagePicker.launch("image/*")
+        imagePicker.launch(arrayOf("image/*"))
     }
 
     private fun showLinkDialog() {
@@ -410,23 +447,26 @@ class AddTaskActivity : AppCompatActivity() {
 
         val edit = view.findViewById<EditText>(R.id.editLink)
 
-        edit.setText(attachedLink)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
             .setView(view)
             .setPositiveButton("บันทึก") { _, _ ->
+
                 val link = edit.text.toString().trim()
 
-                attachedLink = link
+                if (link.isNotEmpty()) {
 
-                if (link.isEmpty()) {
-                    findViewById<TextView>(R.id.tvLinkAdd).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvLinkValue).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvLinkAdd).visibility = View.GONE
-                    findViewById<TextView>(R.id.tvLinkValue).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvLinkValue).text = link
+                    attachments.add(
+                        Attachment("link", link)
+                    )
+
+                    val recyclerAttachments =
+                        findViewById<RecyclerView>(R.id.recyclerAttachments)
+
+                    recyclerAttachments.visibility = View.VISIBLE
+
+                    attachmentAdapter.notifyDataSetChanged()
                 }
             }
             .setNegativeButton("ยกเลิก", null)
@@ -437,12 +477,10 @@ class AddTaskActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_rounded_bg)
 
         dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.85).toInt(),  // กว้าง 85% ของจอ
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
     }
-
 
 
 }

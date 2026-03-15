@@ -357,8 +357,7 @@
                     android:textColor="#444444"
                     android:textSize="15sp"
                     android:visibility="gone"
-                    android:gravity="end"
-                    app:layout_constraintBaseline_toBaselineOf="@id/detvNoteLabel"
+                    app:layout_constraintTop_toBottomOf="@id/detvNoteLabel"
                     app:layout_constraintStart_toStartOf="@id/detvNoteLabel"
                     app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -412,37 +411,17 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <!-- ข้อความลิงก์ -->
-                <TextView
-                    android:id="@+id/detvLinkValue"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerAttachments"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="#444444"
-                    android:textSize="15sp"
+                    android:layout_marginTop="8dp"
                     android:visibility="gone"
-                    android:gravity="end"
-                    android:autoLink="web"
-                    android:linksClickable="true"
-                    android:textColorLink="#6DB1FF"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintBaseline_toBaselineOf="@id/detvLinkLabel"
-                    app:layout_constraintStart_toEndOf="@id/detvLinkLabel"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <!-- รูปภาพ (เล็ก) -->
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/detvImageThumbnail"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:shapeAppearanceOverlay="@style/RoundedCornerImage"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/detvLinkLabel"
-                    app:layout_constraintBottom_toBottomOf="@id/detvLinkLabel" />
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintStart_toStartOf="@id/detvLinkLabel"
+                    app:layout_constraintTop_toBottomOf="@id/detvLinkLabel" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import android.app.AlertDialog
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -115,6 +117,43 @@ class LoginActivity : AppCompatActivity() {
         // ปุ่มย้อนกลับ
         backLogin?.setOnClickListener {
             onBackPressed()
+        }
+
+        val forgotPassword = findViewById<TextView>(R.id.txtForgotPassword)
+
+        forgotPassword.setOnClickListener {
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("รีเซ็ตรหัสผ่าน")
+
+            val input = EditText(this)
+            input.hint = "กรอกอีเมล"
+
+            builder.setView(input)
+
+            builder.setPositiveButton("ส่งลิงก์") { _, _ ->
+
+                val email = input.text.toString()
+
+                if(email.isEmpty()){
+                    Toast.makeText(this,"กรุณากรอกอีเมล",Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                FirebaseAuth.getInstance()
+                    .sendPasswordResetEmail(email)
+                    .addOnSuccessListener {
+                        Toast.makeText(this,"ส่งลิงก์รีเซ็ตรหัสผ่านแล้ว",Toast.LENGTH_LONG).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this,"ไม่พบอีเมลนี้",Toast.LENGTH_LONG).show()
+                    }
+
+            }
+
+            builder.setNegativeButton("ยกเลิก", null)
+
+            builder.show()
         }
     }
 

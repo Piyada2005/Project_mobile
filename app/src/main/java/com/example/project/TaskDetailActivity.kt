@@ -36,11 +36,9 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvNoteValue: TextView
     private lateinit var tvCategory: TextView
     private lateinit var tvLinkAdd: TextView
-    private lateinit var tvLinkValue: TextView
-    private lateinit var ivAttachmentThumbnail: com.google.android.material.imageview.ShapeableImageView
     private var taskId: String? = null
-    private var attachedLink: String = ""
-    private var attachedImageUri: String = ""
+    private val attachments = mutableListOf<Attachment>()
+    private lateinit var attachmentAdapter: AttachmentAdapter
     private var isNotifyEnabled = false
     private lateinit var btnAddSubtask: TextView
     private lateinit var btnDeleteTask: MaterialButton
@@ -55,6 +53,26 @@ class TaskDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task_detail)
 
         bindViews()
+
+        val recyclerAttachments = findViewById<RecyclerView>(R.id.recyclerAttachments)
+        attachmentAdapter = AttachmentAdapter(
+            attachments,
+
+            { position ->   // delete
+                attachments.removeAt(position)
+                attachmentAdapter.notifyDataSetChanged()
+                updateAttachmentSectionVisibility()
+                updateAttachments()
+            },
+
+            { position ->   // image click
+                openImageViewer(position)
+            }
+
+        )
+
+        recyclerAttachments.adapter = attachmentAdapter
+        recyclerAttachments.layoutManager = LinearLayoutManager(this)
 
         taskId = intent.getStringExtra("taskId")
         taskId?.let { loadTask(it) }
@@ -72,8 +90,6 @@ class TaskDetailActivity : AppCompatActivity() {
         tvNoteValue = findViewById(R.id.detvNoteValue)
         tvCategory = findViewById(R.id.detxtCategoryValue)
         tvLinkAdd = findViewById(R.id.detvLinkAdd)
-        tvLinkValue = findViewById(R.id.detvLinkValue)
-        ivAttachmentThumbnail = findViewById(R.id.detvImageThumbnail)
 
         findViewById<ImageView>(R.id.debtnBack).setOnClickListener { finish() }
         btnAddSubtask = findViewById(R.id.deaddSubtask)
@@ -108,8 +124,7 @@ class TaskDetailActivity : AppCompatActivity() {
         //    showAttachmentBottomSheet() 
         // }
         
-        // tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
-        // tvLinkValue.setOnClickListener { showAttachmentBottomSheet() }
+         tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
 
         btnAddSubtask.setOnClickListener {
             openAddSubtaskDialog()
@@ -139,10 +154,21 @@ class TaskDetailActivity : AppCompatActivity() {
 
                 tvCategory.text = task.category
 
-                attachedLink = task.link ?: ""
-                attachedImageUri = task.imageUri ?: ""
-                Log.d("TaskDetail", "loadTask: fetched imageUri = '$attachedImageUri'")
+                val attachmentList = doc.get("attachments") as? List<Map<String, Any>>
+
+                attachments.clear()
+
+                attachmentList?.forEach {
+                    val type = it["type"]?.toString() ?: ""
+                    val value = it["value"]?.toString() ?: ""
+                    attachments.add(Attachment(type, value))
+                }
+
+                val recyclerAttachments = findViewById<RecyclerView>(R.id.recyclerAttachments)
+
                 updateAttachmentSectionVisibility()
+
+                attachmentAdapter.notifyDataSetChanged()
 
                 // ✅ โหลด subtasks ตรงนี้เท่านั้น
                 val subtasks = doc.get("subtasks") as? List<String>
@@ -155,6 +181,7 @@ class TaskDetailActivity : AppCompatActivity() {
                 recyclerSubtask.visibility =
                     if (subtaskList.isEmpty()) View.GONE else View.VISIBLE
 
+                if (!::attachmentAdapter.isInitialized) return@addOnSuccessListener
                 adapter.notifyDataSetChanged()
             }
     }
@@ -303,7 +330,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
         view.findViewById<LinearLayout>(R.id.btnGallery).setOnClickListener {
             dialog.dismiss()
-            imagePicker.launch("image/*")
+            imagePicker.launch(arrayOf("image/*"))
         }
 
         view.findViewById<LinearLayout>(R.id.btnLink).setOnClickListener {
@@ -320,16 +347,21 @@ class TaskDetailActivity : AppCompatActivity() {
             .inflate(R.layout.dialog_add_link, null)
 
         val edit = view.findViewById<EditText>(R.id.editLink)
-        edit.setText(attachedLink)
+        edit.setText("")
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("แนบลิงก์")
             .setView(view)
             .setPositiveButton("บันทึก") { _, _ ->
                 val link = edit.text.toString().trim()
-                attachedLink = link
-                updateTask("link", link)
+                attachments.add(
+                    Attachment("link", link)
+                )
+
+                attachmentAdapter.notifyDataSetChanged()
+
                 updateAttachmentSectionVisibility()
+                updateAttachments()
             }
             .setNegativeButton("ยกเลิก", null)
             .create()
@@ -345,108 +377,30 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     private val imagePicker =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+
             if (uri != null) {
+
                 try {
                     contentResolver.takePersistableUriPermission(
                         uri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
-                    attachedImageUri = uri.toString()
-                    updateTask("imageUri", attachedImageUri)
-                    updateAttachmentSectionVisibility()
                 } catch (e: Exception) {
-                    Log.e("TaskDetail", "Failed to take persistable permission: ${e.message}")
                     e.printStackTrace()
                 }
+
+                attachments.add(
+                    Attachment("image", uri.toString())
+                )
+
+                attachmentAdapter.notifyDataSetChanged()
+
+                updateAttachmentSectionVisibility()
+                updateAttachments()
             }
         }
 
-    private fun updateAttachmentSectionVisibility() {
-        val hasLink = attachedLink.isNotEmpty()
-        val hasImage = attachedImageUri.isNotEmpty()
-        
-        Log.d("TaskDetail", "updateAttachment: hasLink=$hasLink, hasImage=$hasImage, uri='$attachedImageUri'")
-        
-        val attachmentSection = findViewById<ViewGroup>(R.id.attachmentSection)
-
-        if (hasLink || hasImage) {
-            
-            // ถ้ามีลิงก์ ห้ามกดที่แถว (กดได้แค่ตัวลิงก์)
-            // ถ้ามีแค่รูป ให้กดที่แถวเพื่อแก้ไขได้
-            if (hasLink) {
-                attachmentSection.setOnClickListener(null)
-                attachmentSection.isClickable = false
-                attachmentSection.isFocusable = false
-            } else {
-                attachmentSection.setOnClickListener { showAttachmentBottomSheet() }
-                attachmentSection.isClickable = true
-                attachmentSection.isFocusable = true
-            }
-
-            when {
-                hasLink && hasImage -> {
-                    // ทั้งคู่: แสดงลิงก์ขวา, รูปเล็กขวาสุด
-                    tvLinkAdd.visibility = View.GONE
-                    tvLinkValue.visibility = View.VISIBLE
-                    tvLinkValue.text = attachedLink
-                    
-                    ivAttachmentThumbnail.visibility = View.VISIBLE
-                    try {
-                        ivAttachmentThumbnail.setImageURI(Uri.parse(attachedImageUri))
-                        ivAttachmentThumbnail.setOnClickListener { showFullImageDialog(attachedImageUri) }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    
-                    // ปรับ constraint ของ Link Value ให้ไม่ทับรูป
-                    val params = tvLinkValue.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-                    params.endToStart = R.id.detvImageThumbnail
-                    params.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
-                    params.marginEnd = 8
-                    tvLinkValue.layoutParams = params
-                }
-                hasLink -> {
-                    // แค่ลิงก์: แสดงลิงก์ขวา, ซ่อนรูป
-                    tvLinkAdd.visibility = View.GONE
-                    tvLinkValue.visibility = View.VISIBLE
-                    tvLinkValue.text = attachedLink
-                    
-                    ivAttachmentThumbnail.visibility = View.GONE
-                    
-                    // Reset constraint
-                    val params = tvLinkValue.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-                    params.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
-                    params.endToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
-                    tvLinkValue.layoutParams = params
-                }
-                hasImage -> {
-                    // แค่รูป: ลบคำว่า "ไม่มี", แสดงรูปเล็กขวาสุด
-                    tvLinkAdd.visibility = View.GONE
-                    tvLinkValue.visibility = View.GONE
-                    
-                    ivAttachmentThumbnail.visibility = View.VISIBLE
-                    try {
-                        ivAttachmentThumbnail.setImageURI(Uri.parse(attachedImageUri))
-                        ivAttachmentThumbnail.setOnClickListener { showFullImageDialog(attachedImageUri) }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        } else {
-            // ไม่มีข้อมูล: ห้ามกด!
-            attachmentSection.setOnClickListener(null)
-            attachmentSection.isClickable = false
-            attachmentSection.isFocusable = false
-
-            // แสดง "ไม่มี", ซ่อนค่า, ซ่อนรูป
-            tvLinkAdd.visibility = View.VISIBLE
-            tvLinkAdd.text = "ไม่มี"
-            tvLinkValue.visibility = View.GONE
-            ivAttachmentThumbnail.visibility = View.GONE
-        }
-    }
 
     private fun showFullImageDialog(uriString: String) {
         val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -563,5 +517,53 @@ class TaskDetailActivity : AppCompatActivity() {
             }
     }
 
+    private fun updateAttachments() {
+        taskId?.let {
+            db.collection("tasks")
+                .document(it)
+                .update("attachments", attachments)
+        }
+    }
 
+    private fun updateAttachmentSectionVisibility() {
+
+        val recycler = findViewById<RecyclerView>(R.id.recyclerAttachments)
+
+        if (attachments.isEmpty()) {
+            tvLinkAdd.text = "ไม่มี"
+            recycler.visibility = View.GONE
+        } else {
+            tvLinkAdd.text = "เพิ่ม"
+            recycler.visibility = View.VISIBLE
+        }
+    }
+
+    private fun openImageViewer(startPosition: Int) {
+
+        val dialog = android.app.Dialog(
+            this,
+            android.R.style.Theme_Black_NoTitleBar_Fullscreen
+        )
+
+        val view = layoutInflater.inflate(R.layout.dialog_image_viewer, null)
+        dialog.setContentView(view)
+
+        val viewPager = view.findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.viewPagerImages)
+        val btnClose = view.findViewById<ImageView>(R.id.btnClose)
+
+        val imageList = attachments
+            .filter { it.type == "image" }
+            .map { it.value }
+
+        val adapter = ImageViewerAdapter(imageList)
+
+        viewPager.adapter = adapter
+        viewPager.setCurrentItem(startPosition, false)
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
 }
