@@ -1,7 +1,12 @@
 package com.example.project
 
+import android.Manifest
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +16,8 @@ import android.net.Uri
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.button.MaterialButton
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +29,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,7 +46,7 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var tvLinkAdd: TextView
     private var taskId: String? = null
     private val attachments = mutableListOf<Attachment>()
-    private lateinit var attachmentAdapter: AttachmentAdapter
+    private var attachmentDialogAdapter: AttachmentAdapter? = null
     private var isNotifyEnabled = false
     private lateinit var btnAddSubtask: TextView
     private lateinit var btnDeleteTask: MaterialButton
@@ -53,26 +61,7 @@ class TaskDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task_detail)
 
         bindViews()
-
-        val recyclerAttachments = findViewById<RecyclerView>(R.id.recyclerAttachments)
-        attachmentAdapter = AttachmentAdapter(
-            attachments,
-
-            { position ->   // delete
-                attachments.removeAt(position)
-                attachmentAdapter.notifyDataSetChanged()
-                updateAttachmentSectionVisibility()
-                updateAttachments()
-            },
-
-            { position ->   // image click
-                openImageViewer(position)
-            }
-
-        )
-
-        recyclerAttachments.adapter = attachmentAdapter
-        recyclerAttachments.layoutManager = LinearLayoutManager(this)
+        requestNotificationPermissionIfNeeded()
 
         taskId = intent.getStringExtra("taskId")
         taskId?.let { loadTask(it) }
@@ -101,6 +90,23 @@ class TaskDetailActivity : AppCompatActivity() {
         recyclerSubtask.adapter = adapter
         recyclerSubtask.layoutManager = LinearLayoutManager(this)
         recyclerSubtask.visibility = View.GONE
+
+        setTodayAsDefaultDueDate()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val granted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!granted) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                1001
+            )
+        }
     }
 
     private fun setupListeners() {
@@ -119,12 +125,8 @@ class TaskDetailActivity : AppCompatActivity() {
         tvNoteAdd.setOnClickListener { openNoteBottomSheet() }
         tvNoteValue.setOnClickListener { openNoteBottomSheet() }
         tvCategory.setOnClickListener { openCategoryDialog() }
-
-        // findViewById<ViewGroup>(R.id.attachmentSection).setOnClickListener { 
-        //    showAttachmentBottomSheet() 
-        // }
-        
-         tvLinkAdd.setOnClickListener { showAttachmentBottomSheet() }
+        findViewById<View>(R.id.attachmentSection).setOnClickListener { showAttachmentListModal() }
+        tvLinkAdd.setOnClickListener { showAttachmentListModal() }
 
         btnAddSubtask.setOnClickListener {
             openAddSubtaskDialog()
@@ -164,11 +166,8 @@ class TaskDetailActivity : AppCompatActivity() {
                     attachments.add(Attachment(type, value))
                 }
 
-                val recyclerAttachments = findViewById<RecyclerView>(R.id.recyclerAttachments)
-
                 updateAttachmentSectionVisibility()
-
-                attachmentAdapter.notifyDataSetChanged()
+                attachmentDialogAdapter?.notifyDataSetChanged()
 
                 // ✅ โหลด subtasks ตรงนี้เท่านั้น
                 val subtasks = doc.get("subtasks") as? List<String>
@@ -181,9 +180,14 @@ class TaskDetailActivity : AppCompatActivity() {
                 recyclerSubtask.visibility =
                     if (subtaskList.isEmpty()) View.GONE else View.VISIBLE
 
-                if (!::attachmentAdapter.isInitialized) return@addOnSuccessListener
                 adapter.notifyDataSetChanged()
+                scheduleTaskReminder()
             }
+    }
+
+    private fun setTodayAsDefaultDueDate() {
+        val dateNow = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date())
+        tvDue.text = dateNow
     }
 
     // ================= DATE =================
@@ -200,6 +204,7 @@ class TaskDetailActivity : AppCompatActivity() {
             val date = sdf.format(Date(it))
             tvDue.text = date
             updateTask("dueDate", date)
+            scheduleTaskReminder()
         }
     }
 
@@ -220,6 +225,7 @@ class TaskDetailActivity : AppCompatActivity() {
             val time = String.format("%02d:%02d", picker.hour, picker.minute)
             tvTime.text = time
             updateTask("time", time)
+            scheduleTaskReminder()
         }
     }
 
@@ -271,12 +277,14 @@ class TaskDetailActivity : AppCompatActivity() {
             if (!isNotifyEnabled) {
                 tvNotify.text = "ปิดการแจ้งเตือน"
                 updateTask("notify", "ปิดการแจ้งเตือน")
+                cancelTaskReminder()
             } else {
                 val selectedId = radioGroup.checkedRadioButtonId
                 if (selectedId != -1) {
                     val selected = view.findViewById<RadioButton>(selectedId)
                     tvNotify.text = selected.text
                     updateTask("notify", selected.text.toString())
+                    scheduleTaskReminder()
                 }
             }
             dialog.dismiss()
@@ -341,6 +349,56 @@ class TaskDetailActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun showAttachmentListModal() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.bottomsheet_attachment_list, null)
+        dialog.setContentView(view)
+
+        val recycler = view.findViewById<RecyclerView>(R.id.recyclerAttachmentDialog)
+        val tvEmpty = view.findViewById<TextView>(R.id.tvAttachmentEmpty)
+        val btnAdd = view.findViewById<MaterialButton>(R.id.btnAddAttachmentModal)
+        val btnClose = view.findViewById<ImageView>(R.id.btnCloseAttachmentModal)
+
+        attachmentDialogAdapter = AttachmentAdapter(
+            attachments,
+            { position ->
+                attachments.removeAt(position)
+                attachmentDialogAdapter?.notifyDataSetChanged()
+                updateAttachmentModalState(tvEmpty, recycler)
+                updateAttachmentSectionVisibility()
+                updateAttachments()
+            },
+            { imageIndex ->
+                openImageViewer(imageIndex)
+            }
+        )
+
+        recycler.adapter = attachmentDialogAdapter
+        recycler.layoutManager = LinearLayoutManager(this)
+        updateAttachmentModalState(tvEmpty, recycler)
+
+        btnAdd.setOnClickListener {
+            dialog.dismiss()
+            showAttachmentBottomSheet()
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun updateAttachmentModalState(tvEmpty: TextView, recycler: RecyclerView) {
+        if (attachments.isEmpty()) {
+            tvEmpty.visibility = View.VISIBLE
+            recycler.visibility = View.GONE
+        } else {
+            tvEmpty.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
+        }
+    }
+
     private fun showLinkDialog() {
 
         val view = LayoutInflater.from(this)
@@ -358,7 +416,7 @@ class TaskDetailActivity : AppCompatActivity() {
                     Attachment("link", link)
                 )
 
-                attachmentAdapter.notifyDataSetChanged()
+                attachmentDialogAdapter?.notifyDataSetChanged()
 
                 updateAttachmentSectionVisibility()
                 updateAttachments()
@@ -394,7 +452,7 @@ class TaskDetailActivity : AppCompatActivity() {
                     Attachment("image", uri.toString())
                 )
 
-                attachmentAdapter.notifyDataSetChanged()
+                attachmentDialogAdapter?.notifyDataSetChanged()
 
                 updateAttachmentSectionVisibility()
                 updateAttachments()
@@ -497,6 +555,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
     private fun deleteTask() {
         val id = taskId ?: return
+        cancelTaskReminder()
         db.collection("tasks")
             .document(id)
             .delete()
@@ -508,6 +567,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
     private fun completeTask() {
         val id = taskId ?: return
+        cancelTaskReminder()
         db.collection("tasks")
             .document(id)
             .update("isFinished", true)
@@ -526,15 +586,83 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     private fun updateAttachmentSectionVisibility() {
-
-        val recycler = findViewById<RecyclerView>(R.id.recyclerAttachments)
-
         if (attachments.isEmpty()) {
-            tvLinkAdd.text = "ไม่มี"
-            recycler.visibility = View.GONE
-        } else {
             tvLinkAdd.text = "เพิ่ม"
-            recycler.visibility = View.VISIBLE
+        } else {
+            tvLinkAdd.text = "ดู"
+        }
+    }
+
+    private fun scheduleTaskReminder() {
+        val notifyText = tvNotify.text.toString()
+        if (!isNotifyEnabled || notifyText == "ปิดการแจ้งเตือน") {
+            cancelTaskReminder()
+            return
+        }
+
+        val dueAtMillis = parseDueDateTimeMillis() ?: return
+        val offsetMillis = reminderOffsetMillis(notifyText)
+        val scheduledTime = maxOf(System.currentTimeMillis() + 2000L, dueAtMillis - offsetMillis)
+
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val pendingIntent = buildReminderPendingIntent(PendingIntent.FLAG_UPDATE_CURRENT) ?: return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduledTime, pendingIntent)
+        } else {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduledTime, pendingIntent)
+        }
+    }
+
+    private fun cancelTaskReminder() {
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val pendingIntent = buildReminderPendingIntent(PendingIntent.FLAG_NO_CREATE)
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+            it.cancel()
+        }
+    }
+
+    private fun buildReminderPendingIntent(flag: Int): PendingIntent? {
+        val id = taskId ?: return null
+        val title = etTitle.text?.toString()?.trim().orEmpty().ifBlank { "งานที่กำหนด" }
+        val due = "${tvDue.text} ${tvTime.text}"
+
+        val intent = Intent(this, TaskReminderReceiver::class.java).apply {
+            putExtra(TaskReminderReceiver.EXTRA_TITLE, title)
+            putExtra(TaskReminderReceiver.EXTRA_DUE, due)
+            putExtra(TaskReminderReceiver.EXTRA_NOTIFICATION_ID, id.hashCode())
+        }
+
+        val pendingFlag = flag or PendingIntent.FLAG_IMMUTABLE
+        return PendingIntent.getBroadcast(this, id.hashCode(), intent, pendingFlag)
+    }
+
+    private fun parseDueDateTimeMillis(): Long? {
+        val dueDate = tvDue.text.toString().trim()
+        val dueTime = tvTime.text.toString().trim()
+
+        if (dueDate.isEmpty() || dueTime.isEmpty() || dueTime == "ไม่") return null
+
+        val parser = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+        parser.isLenient = false
+
+        return try {
+            parser.parse("$dueDate $dueTime")?.time
+        } catch (_: ParseException) {
+            null
+        }
+    }
+
+    private fun reminderOffsetMillis(notifyText: String): Long {
+        return when {
+            notifyText.contains("5 นาที") -> 5L * 60L * 1000L
+            notifyText.contains("15 นาที") -> 15L * 60L * 1000L
+            notifyText.contains("30 นาที") -> 30L * 60L * 1000L
+            notifyText.contains("1 วัน") -> 24L * 60L * 60L * 1000L
+            notifyText.contains("2 วัน") -> 2L * 24L * 60L * 60L * 1000L
+            notifyText.contains("3 วัน") -> 3L * 24L * 60L * 60L * 1000L
+            else -> 0L
         }
     }
 

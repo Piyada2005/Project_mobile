@@ -44,7 +44,8 @@ class AttachmentAdapter(
                 holder.image.setImageURI(uri)
 
                 holder.image.setOnClickListener {
-                    onImageClick(position)
+                    val imageIndex = list.take(position + 1).count { it.type == "image" } - 1
+                    onImageClick(imageIndex)
                 }
 
             } catch (e: Exception) {

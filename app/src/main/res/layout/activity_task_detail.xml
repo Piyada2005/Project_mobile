@@ -159,7 +159,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="4dp"
-                android:text="2026/01/14"
+                android:text="ไม่"
                 android:textColor="#6DB1FF"
                 android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/detxtDueLabel"
@@ -397,16 +397,14 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- ขวา (กดได้) -->
-                <!-- ปุ่มเพิ่ม -->
                 <TextView
                     android:id="@+id/detvLinkAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ไม่มี"
-                    android:textColor="#999999"
+                    android:text="เพิ่ม"
+                    android:textColor="#6DB1FF"
                     android:textSize="16sp"
                     android:padding="4dp"
-                    android:alpha="0.6"
                     app:layout_constraintBaseline_toBaselineOf="@id/detvLinkLabel"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
