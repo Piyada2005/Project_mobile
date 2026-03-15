@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import android.app.AlertDialog
+import android.widget.LinearLayout
 
 
 class LoginActivity : AppCompatActivity() {
@@ -129,7 +130,13 @@ class LoginActivity : AppCompatActivity() {
             val input = EditText(this)
             input.hint = "กรอกอีเมล"
 
-            builder.setView(input)
+            val layout = LinearLayout(this)
+            layout.orientation = LinearLayout.VERTICAL
+            layout.setPadding(60, 20, 60, 0)   // ซ้าย บน ขวา ล่าง
+
+            layout.addView(input)
+
+            builder.setView(layout)
 
             builder.setPositiveButton("ส่งลิงก์") { _, _ ->
 
