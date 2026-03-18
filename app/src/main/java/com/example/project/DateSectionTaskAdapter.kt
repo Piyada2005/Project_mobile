@@ -88,12 +88,14 @@ class DateSectionTaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun updateSections(
         overdueTasks: List<Task>,
         todayTasks: List<Task>,
-        upcomingTasks: List<Task>
+        upcomingTasks: List<Task>,
+        futureTasks: List<Task>
     ) {
         rows.clear()
         appendSection("ก่อนหน้า", overdueTasks)
         appendSection("วันนี้", todayTasks)
         appendSection("กำลังจะถึง", upcomingTasks)
+        appendSection("ในอนาคต", futureTasks)
 
         notifyDataSetChanged()
     }

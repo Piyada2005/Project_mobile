@@ -265,19 +265,26 @@ class ProfileActivity : BaseActivity() {
                 var workCategoryCount = 0
                 var favoriteCategoryCount = 0
                 var birthdayCategoryCount = 0
+                var uncategorizedCount = 0
                 for (document in result) {
                     val isFinished = document.getBoolean("isFinished") ?: false
                     val category = document.getString("category").orEmpty()
-                    if (isFinished) completed++ else pending++
-                    when (category) {
-                        "งาน" -> workCategoryCount++
-                        "รายการโปรด" -> favoriteCategoryCount++
-                        "วันเกิด", "วันเกิน" -> birthdayCategoryCount++
+                    if (isFinished) {
+                        completed++
+                        when (category) {
+                            "งาน" -> workCategoryCount++
+                            "รายการโปรด" -> favoriteCategoryCount++
+                            "วันเกิด", "วันเกิน" -> birthdayCategoryCount++
+                            "", "ไม่มีหมวดหมู่" -> uncategorizedCount++
+                            else -> uncategorizedCount++
+                        }
+                    } else {
+                        pending++
                     }
                 }
                 tvCompletedCount.text = completed.toString()
                 tvPendingCount.text = pending.toString()
-                updatePieChart(workCategoryCount, favoriteCategoryCount, birthdayCategoryCount)
+                updatePieChart(workCategoryCount, favoriteCategoryCount, birthdayCategoryCount, uncategorizedCount)
             }
     }
 
@@ -312,7 +319,12 @@ class ProfileActivity : BaseActivity() {
         pieChart.setCenterTextColor(Color.parseColor("#666666"))
     }
 
-    private fun updatePieChart(workCategoryCount: Int, favoriteCategoryCount: Int, birthdayCategoryCount: Int) {
+    private fun updatePieChart(
+        workCategoryCount: Int,
+        favoriteCategoryCount: Int,
+        birthdayCategoryCount: Int,
+        uncategorizedCount: Int
+    ) {
         val entries = mutableListOf<PieEntry>()
         val colors = mutableListOf<Int>()
 
@@ -325,8 +337,12 @@ class ProfileActivity : BaseActivity() {
             colors.add(Color.parseColor("#9FC5FF"))
         }
         if (birthdayCategoryCount > 0) {
-            entries.add(PieEntry(birthdayCategoryCount.toFloat(), "วันเกิน"))
+            entries.add(PieEntry(birthdayCategoryCount.toFloat(), "วันเกิด"))
             colors.add(Color.parseColor("#5D9CFF"))
+        }
+        if (uncategorizedCount > 0) {
+            entries.add(PieEntry(uncategorizedCount.toFloat(), "ไม่มีหมวดหมู่"))
+            colors.add(Color.parseColor("#B0BEC5"))
         }
 
         if (entries.isEmpty()) {
@@ -342,7 +358,7 @@ class ProfileActivity : BaseActivity() {
         pieChart.data = PieData(dataSet).apply {
             setDrawValues(false)
         }
-        pieChart.centerText = "${workCategoryCount + favoriteCategoryCount + birthdayCategoryCount}\nงาน"
+        pieChart.centerText = "${workCategoryCount + favoriteCategoryCount + birthdayCategoryCount + uncategorizedCount}\nงาน"
         pieChart.invalidate()
     }
 }

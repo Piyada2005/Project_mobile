@@ -153,7 +153,7 @@ class TaskActivity : BaseActivity() {
                 allTasks
             }
             "รายการโปรด" -> {
-                allTasks.filter { it.isStarred }
+                allTasks.filter { it.category == "รายการโปรด" }
             }
             else -> {
                 allTasks.filter { it.category == category }
@@ -164,7 +164,8 @@ class TaskActivity : BaseActivity() {
         taskAdapter.updateSections(
             overdueTasks = groupedTasks.overdue,
             todayTasks = groupedTasks.today,
-            upcomingTasks = groupedTasks.upcoming
+            upcomingTasks = groupedTasks.upcoming,
+            futureTasks = groupedTasks.future
         )
 
         // 2️⃣ ไฮไลต์หมวด
@@ -183,34 +184,45 @@ class TaskActivity : BaseActivity() {
     private data class DateGroupedTasks(
         val overdue: List<Task>,
         val today: List<Task>,
-        val upcoming: List<Task>
+        val upcoming: List<Task>,
+        val future: List<Task>
     )
 
     private fun groupTasksByDate(tasks: List<Task>): DateGroupedTasks {
         val overdue = mutableListOf<Task>()
         val today = mutableListOf<Task>()
         val upcoming = mutableListOf<Task>()
+        val future = mutableListOf<Task>()
         val todayStart = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
+        val tomorrowStart = (todayStart.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_YEAR, 1)
+        }
+        val upcomingEnd = (todayStart.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_YEAR, 7)
+        }
 
         tasks.forEach { task ->
             val dueDate = parseDueDate(task.dueDate)
             when {
-                dueDate == null -> upcoming.add(task)
+                dueDate == null -> future.add(task)
                 isSameDay(dueDate, todayStart) -> today.add(task)
                 dueDate.before(todayStart) -> overdue.add(task)
-                else -> upcoming.add(task)
+                dueDate.before(tomorrowStart) -> today.add(task)
+                !dueDate.after(upcomingEnd) -> upcoming.add(task)
+                else -> future.add(task)
             }
         }
 
         return DateGroupedTasks(
             overdue = overdue,
             today = today,
-            upcoming = upcoming
+            upcoming = upcoming,
+            future = future
         )
     }
 
